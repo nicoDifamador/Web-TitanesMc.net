@@ -2,16 +2,27 @@
 /* ESTILOS GLOBALES DE LA TIENDA (css/estilo.css)                    */
 /* ================================================================= */
 
+:root {
+    --site-primary: #f6e05e;
+    --site-background: #0f1015;
+    --site-surface: #18191e;
+    --site-text: #f1f5f9;
+    --site-muted: #94a3b8;
+    --site-border: #2a2b36;
+    --site-success: #48bb78;
+    --site-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--site-font-family);
 }
 
 body {
-    background-color: #0f1015;
-    color: #f1f5f9;
+    background-color: var(--site-background);
+    color: var(--site-text);
 }
 
 /* --- HEADER SUPERIOR --- */
@@ -23,8 +34,8 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 25px 50px;
-    background: linear-gradient(135deg, #121318 0%, #1a1b22 100%);
-    border-bottom: 2px solid #2a2b36;
+    background: linear-gradient(135deg, var(--site-background) 0%, var(--site-surface) 100%);
+    border-bottom: 2px solid var(--site-border);
     position: relative;
     overflow: hidden;
 }
@@ -59,14 +70,14 @@ body {
 
 .server-title h1 {
     font-size: 20px;
-    color: #f6e05e;
+    color: var(--site-primary);
     font-weight: 800;
     letter-spacing: 1px;
 }
 
 .server-title span {
     font-size: 11px;
-    color: #94a3b8;
+    color: var(--site-muted);
     text-transform: uppercase;
     letter-spacing: 2px;
 }
@@ -79,9 +90,9 @@ body {
 }
 
 .btn-login, .btn-basket {
-    background-color: #1a1b22;
-    border: 1px solid #3b3d4f;
-    color: #f1f5f9;
+    background-color: var(--site-surface);
+    border: 1px solid var(--site-border);
+    color: var(--site-text);
     padding: 8px 16px;
     border-radius: 6px;
     cursor: pointer;
@@ -91,8 +102,8 @@ body {
 }
 
 .btn-login:hover, .btn-basket:hover {
-    border-color: #f6e05e;
-    color: #f6e05e;
+    border-color: var(--site-primary);
+    color: var(--site-primary);
 }
 
 /* --- CONTENEDOR MAESTRO (DOS COLUMNAS) --- */
@@ -116,12 +127,12 @@ body {
 
 .cat-btn {
     display: block;
-    background-color: #18191e;
-    color: #94a3b8;
+    background-color: var(--site-surface);
+    color: var(--site-muted);
     text-decoration: none;
     padding: 12px 18px;
     border-radius: 8px;
-    border: 1px solid #2a2b36;
+    border: 1px solid var(--site-border);
     font-weight: bold;
     font-size: 14px;
     transition: all 0.2s ease;
@@ -129,19 +140,19 @@ body {
 
 .cat-btn:hover {
     background-color: #21222b;
-    color: #f1f5f9;
+    color: var(--site-text);
 }
 
 .cat-btn.active {
-    background-color: #f6e05e;
-    color: #0f1015;
-    border-color: #f6e05e;
+    background-color: var(--site-primary);
+    color: var(--site-background);
+    border-color: var(--site-primary);
 }
 
 /* TOP DONADORES */
 .top-donators-box {
-    background-color: #18191e;
-    border: 1px solid #2a2b36;
+    background-color: var(--site-surface);
+    border: 1px solid var(--site-border);
     border-radius: 10px;
     padding: 15px;
     margin-top: 15px;
@@ -149,7 +160,7 @@ body {
 
 .top-donators-box h3 {
     font-size: 14px;
-    color: #f6e05e;
+    color: var(--site-primary);
     margin-bottom: 12px;
 }
 
@@ -184,7 +195,7 @@ body {
 }
 
 .player-amount {
-    color: #4ade80;
+    color: var(--site-success);
     font-weight: bold;
 }
 /* ================= CONTENEDOR PRINCIPAL Y GRILLA ================= */
@@ -199,8 +210,8 @@ body {
 }
 
 .item-card {
-    background-color: #121520;
-    border: 1px solid #1e2230;
+    background-color: var(--site-surface);
+    border: 1px solid var(--site-border);
     border-radius: 12px;
     padding: 22px;
     display: flex;
@@ -226,15 +237,15 @@ body {
 }
 
 .item-price {
-    color: #4ade80;
+    color: var(--site-success);
     font-weight: bold;
     font-size: 18px;
 }
 
 /* --- BOTONES Y MODALES --- */
 .submit-btn {
-    background-color: #f6e05e;
-    color: #0f1015;
+    background-color: var(--site-primary);
+    color: var(--site-background);
     border: none;
     padding: 8px 16px;
     font-weight: bold;
@@ -244,7 +255,7 @@ body {
 }
 
 .submit-btn:hover {
-    background-color: #ecc94b;
+    filter: brightness(0.92);
 }
 
 .modal-overlay {
@@ -258,17 +269,17 @@ body {
 }
 
 .modal-content {
-    background-color: #18191e;
-    border: 1px solid #2a2b36;
+    background-color: var(--site-surface);
+    border: 1px solid var(--site-border);
     padding: 30px;
     border-radius: 10px;
     width: 350px;
     position: relative;
-    color: #f1f5f9;
+    color: var(--site-text);
 }
 
 .modal-content h3 {
-    color: #f6e05e;
+    color: var(--site-primary);
     font-size: 18px;
     margin-bottom: 5px;
     text-align: center;
@@ -279,27 +290,27 @@ body {
     top: 15px; right: 20px;
     font-size: 20px;
     cursor: pointer;
-    color: #94a3b8;
+    color: var(--site-muted);
 }
 
 .close-modal:hover {
-    color: #f1f5f9;
+    color: var(--site-text);
 }
 
 .modal-content label {
     display: block;
     font-size: 13px;
     margin-bottom: 8px;
-    color: #94a3b8;
+    color: var(--site-muted);
 }
 
 .modal-content input {
     width: 100%;
     padding: 10px;
-    background-color: #121318;
-    border: 1px solid #2a2b36;
+    background-color: var(--site-background);
+    border: 1px solid var(--site-border);
     border-radius: 6px;
-    color: #f1f5f9;
+    color: var(--site-text);
     margin-bottom: 15px;
     font-size: 14px;
 }
@@ -310,7 +321,7 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: #0b0c10;
+    background: var(--site-background);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -337,14 +348,14 @@ body {
     width: 60px;
     height: 60px;
     border: 4px solid rgba(246, 224, 94, 0.2);
-    border-top: 4px solid #f6e05e;
+    border-top: 4px solid var(--site-primary);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
     margin-bottom: 15px;
 }
 
 .loader-text {
-    color: #f6e05e;
+    color: var(--site-primary);
     font-family: monospace;
     font-size: 25px;
     letter-spacing: 3px;
@@ -371,9 +382,9 @@ body {
 /* FOOTER (PIE DE PÁGINA )                                  */
 
 .site-footer {
-    background: linear-gradient(135deg, #0b0c10 0%, #15161c 100%);
-    border-top: 2px solid #2a2b36;
-    color: #94a3b8;
+    background: linear-gradient(135deg, var(--site-background) 0%, var(--site-surface) 100%);
+    border-top: 2px solid var(--site-border);
+    color: var(--site-muted);
     padding: 40px 20px 20px;
     margin-top: 50px;
     font-family: inherit;
@@ -390,7 +401,7 @@ body {
 }
 
 .footer-col h4 {
-    color: #f6e05e;
+    color: var(--site-primary);
     font-size: 16px;
     margin-bottom: 15px;
     text-transform: uppercase;
@@ -413,14 +424,14 @@ body {
 }
 
 .footer-links a {
-    color: #94a3b8;
+    color: var(--site-muted);
     text-decoration: none;
     font-size: 13px;
     transition: color 0.2s;
 }
 
 .footer-links a:hover {
-    color: #f6e05e;
+    color: var(--site-primary);
 }
 
 .footer-bottom {
@@ -432,11 +443,11 @@ body {
     gap: 10px;
     text-align: center;
     font-size: 12px;
-    color: #64748b;
+    color: var(--site-muted);
 }
 
 .footer-bottom p strong {
-    color: #f6e05e;
+    color: var(--site-primary);
 }
 
 /* CARRITO FUNCIONAL Y ANIMACIONES "RIQUISIMAS"                       */
@@ -455,8 +466,8 @@ body {
 }
 
 .modal-content {
-    background: #15161c;
-    border: 1px solid #2a2b36;
+    background: var(--site-surface);
+    border: 1px solid var(--site-border);
     border-radius: 16px;
     padding: 30px;
     width: 90%;
@@ -481,11 +492,11 @@ body {
     position: absolute;
     top: 15px; right: 20px;
     font-size: 24px;
-    color: #94a3b8;
+    color: var(--site-muted);
     cursor: pointer;
     transition: color 0.2s;
 }
-.close-modal:hover { color: #f6e05e; }
+.close-modal:hover { color: var(--site-primary); }
 
 /* Lista de ítems dentro del carrito */
 .cart-items-container {
@@ -499,21 +510,21 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #1a1b22;
+    background: var(--site-surface);
     padding: 10px 14px;
     border-radius: 8px;
     margin-bottom: 8px;
-    border: 1px solid #2a2b36;
+    border: 1px solid var(--site-border);
 }
 
 .cart-item-info span {
     display: block;
     font-size: 13px;
-    color: #f1f5f9;
+    color: var(--site-text);
 }
 .cart-item-info small {
     font-size: 11px;
-    color: #f6e05e;
+    color: var(--site-primary);
 }
 
 .cart-item-actions {
@@ -533,7 +544,7 @@ body {
 .btn-remove:hover { transform: scale(1.2); }
 
 .cart-total-section {
-    border-top: 1px solid #2a2b36;
+    border-top: 1px solid var(--site-border);
     padding-top: 15px;
     margin-top: 15px;
     display: flex;
@@ -541,11 +552,11 @@ body {
     align-items: center;
     font-size: 16px;
     font-weight: bold;
-    color: #f1f5f9;
+    color: var(--site-text);
 }
 
 .cart-total-price {
-    color: #f6e05e;
+    color: var(--site-primary);
 }
 
 /* Notificación Flotante (Toast) Riquísima */
@@ -553,7 +564,7 @@ body {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: var(--site-success);
     color: #fff;
     padding: 12px 24px;
     border-radius: 10px;
@@ -606,8 +617,8 @@ body {
 /* ================= LATERAL IZQUIERDO Y BOTONES DE NAVEGACIÓN ================= */
 .categories-nav {
     width: 280px;
-    background-color: #0d1019;
-    border: 1px solid #1a2238;
+    background-color: var(--site-surface);
+    border: 1px solid var(--site-border);
     border-radius: 12px;
     padding: 20px 15px;
     display: flex;
@@ -621,9 +632,9 @@ body {
     display: flex;
     align-items: center;
     padding: 12px 18px;
-    background-color: #131827;
-    border: 1px solid #1f2a44;
-    color: #94a3b8;
+    background-color: var(--site-surface);
+    border: 1px solid var(--site-border);
+    color: var(--site-muted);
     text-decoration: none;
     border-radius: 8px;
     font-size: 13px;
@@ -632,16 +643,16 @@ body {
 }
 
 .cat-btn:hover {
-    background-color: #1a2238;
-    color: #f6e05e;
-    border-color: #2e3b5e;
+    background-color: var(--site-background);
+    color: var(--site-primary);
+    border-color: var(--site-primary);
 }
 
 /* Estilo para el botón activo (como 'Inicio' en la imagen) */
 .cat-btn.active {
-    background: linear-gradient(135deg, #e6b94d 0%, #c99422 100%);
-    border-color: #f6e05e;
-    color: #0b0d14;
+    background: var(--site-primary);
+    border-color: var(--site-primary);
+    color: var(--site-background);
     font-weight: 700;
     box-shadow: 0 4px 12px rgba(214, 158, 46, 0.3);
 }
@@ -853,7 +864,7 @@ body {
 
 /* 1. Rayos de Zeus (Dorado eléctrico) */
 .key-zeus {
-    border: 2px solid #f6e05e;
+    border: 2px solid var(--site-primary);
     box-shadow: 0 0 20px rgba(246, 224, 94, 0.25);
 }
 .key-zeus:hover {

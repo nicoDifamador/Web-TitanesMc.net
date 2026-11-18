@@ -6,7 +6,6 @@
     <title>Rangos Supremos - TITANES MC Network</title>
     <link rel="stylesheet" href="css/estilo.css">
     <!-- SDK de PayPal -->
-    <script src="https://www.paypal.com/sdk/js?client-id=BAAQzPha3zUtaXBZQrnyWImfSCLCloXSUecvF9jfn-5exxYWKcLGRNl4Od-2gCofs3bauC7FlSIwpSngMw&currency=USD"></script>
     <style>
         .main-layout {
             display: flex;
@@ -123,7 +122,7 @@
                 
                 <!-- 1. ZEUS -->
                 <div class="item-card" style="border: 1px solid #d69e2e;" onclick="abrirModalRango('modal-zeus')">
-                    <div class="ribbon-discount">-20% DESC</div>
+                    <div class="ribbon-discount" data-product-discount="Rango Zeus (Mensual)"></div>
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <img src="img/zeus-icon.jpg" alt="Zeus" style="width: 50px; height: 50px; border-radius: 6px; border: 1px solid #d69e2e; object-fit: cover;">
                         <div>
@@ -137,7 +136,7 @@
                     <div>
                         <p style="color: #a0aec0; font-size: 11px; font-style: italic; margin: 0 0 10px 0; text-align: center;">"El rey del panteón y portador del rayo divino."</p>
                         <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232736; padding-top: 10px;">
-                            <span style="color: #fff; font-weight: bold; font-size: 15px;">Desde $24.00 USD</span>
+                            <span style="color: #fff; font-weight: bold; font-size: 15px;" data-product-price="Rango Zeus (Mensual)" data-price-prefix="Desde " data-price-suffix=" USD"></span>
                             <span style="color: #f6e05e; font-size: 11px; font-weight: bold;">VER DETALLES &gt;</span>
                         </div>
                     </div>
@@ -145,7 +144,7 @@
 
                 <!-- 2. POSEIDÓN -->
                 <div class="item-card" style="border: 1px solid #3182ce;" onclick="abrirModalRango('modal-poseidon')">
-                    <div class="ribbon-discount">-20% DESC</div>
+                    <div class="ribbon-discount" data-product-discount="Rango Poseidón (Mensual)"></div>
                     <div style="display: flex; align-items: center; gap: 26px;">
                         <img src="img/poseidon-icono.png" alt="Poseidón" style="width: 50px; height: 50px; border-radius: 9px; border: 1px solid #3182ce; object-fit: cover;">
                         <div>
@@ -159,7 +158,7 @@
                     <div>
                         <p style="color: #a0aec0; font-size: 11px; font-style: italic; margin: 0 0 10px 0; text-align: center;">"El poder de los océanos y tormentas a tu merced."</p>
                         <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232736; padding-top: 10px;">
-                            <span style="color: #fff; font-weight: bold; font-size: 15px;">Desde $20.00 USD</span>
+                            <span style="color: #fff; font-weight: bold; font-size: 15px;" data-product-price="Rango Poseidón (Mensual)" data-price-prefix="Desde " data-price-suffix=" USD"></span>
                             <span style="color: #63b3ed; font-size: 11px; font-weight: bold;">VER DETALLES &gt;</span>
                         </div>
                     </div>
@@ -167,7 +166,7 @@
 
                 <!-- 3. HADES -->
                 <div class="item-card" style="border: 1px solid #805ad5;" onclick="abrirModalRango('modal-hades')">
-                    <div class="ribbon-discount">-20% DESC</div>
+                    <div class="ribbon-discount" data-product-discount="Rango Hades (Mensual)"></div>
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <img src="img/hades-icono.png" alt="Hades" style="width: 50px; height: 50px; border-radius: 6px; border: 1px solid #805ad5; object-fit: cover;">
                         <div>
@@ -181,7 +180,7 @@
                     <div>
                         <p style="color: #a0aec0; font-size: 11px; font-style: italic; margin: 0 0 10px 0; text-align: center;">"Señor indiscutible de las profundidades del inframundo."</p>
                         <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232736; padding-top: 10px;">
-                            <span style="color: #fff; font-weight: bold; font-size: 15px;">Desde $20.00 USD</span>
+                            <span style="color: #fff; font-weight: bold; font-size: 15px;" data-product-price="Rango Hades (Mensual)" data-price-prefix="Desde " data-price-suffix=" USD"></span>
                             <span style="color: #b794f4; font-size: 11px; font-weight: bold;">VER DETALLES &gt;</span>
                         </div>
                     </div>
@@ -189,7 +188,7 @@
 
                 <!-- 4. ATENEA -->
                 <div class="item-card" style="border: 1px solid #319795;" onclick="abrirModalRango('modal-atenea')">
-                    <div class="ribbon-discount">-20% DESC</div>
+                    <div class="ribbon-discount" data-product-discount="Rango Atenea (Mensual)"></div>
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <img src="img/atenea-icono.png" alt="Atenea" style="width: 50px; height: 50px; border-radius: 6px; border: 1px solid #319795; object-fit: cover;">
                         <div>
@@ -203,7 +202,7 @@
                     <div>
                         <p style="color: #a0aec0; font-size: 11px; font-style: italic; margin: 0 0 10px 0; text-align: center;">"La sabiduría táctica y el escudo impenetrable en batalla."</p>
                         <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232736; padding-top: 10px;">
-                            <span style="color: #fff; font-weight: bold; font-size: 15px;">Desde $17.00 USD</span>
+                            <span style="color: #fff; font-weight: bold; font-size: 15px;" data-product-price="Rango Atenea (Mensual)" data-price-prefix="Desde " data-price-suffix=" USD"></span>
                             <span style="color: #4fd1c5; font-size: 11px; font-weight: bold;">VER DETALLES &gt;</span>
                         </div>
                     </div>
@@ -211,7 +210,7 @@
 
                 <!-- 5. ARES -->
                 <div class="item-card" style="border: 1px solid #e53e3e;" onclick="abrirModalRango('modal-ares')">
-                    <div class="ribbon-discount">-20% DESC</div>
+                    <div class="ribbon-discount" data-product-discount="Rango Ares (Mensual)"></div>
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <img src="img/ares-icono.png" alt="Ares" style="width: 50px; height: 50px; border-radius: 6px; border: 1px solid #e53e3e; object-fit: cover;">
                         <div>
@@ -225,7 +224,7 @@
                     <div>
                         <p style="color: #a0aec0; font-size: 11px; font-style: italic; margin: 0 0 10px 0; text-align: center;">"La furia desatada y la fuerza indomable en el combate."</p>
                         <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232736; padding-top: 10px;">
-                            <span style="color: #fff; font-weight: bold; font-size: 15px;">Desde $15.00 USD</span>
+                            <span style="color: #fff; font-weight: bold; font-size: 15px;" data-product-price="Rango Ares (Mensual)" data-price-prefix="Desde " data-price-suffix=" USD"></span>
                             <span style="color: #fc8181; font-size: 11px; font-weight: bold;">VER DETALLES &gt;</span>
                         </div>
                     </div>
@@ -233,7 +232,7 @@
 
                 <!-- 6. APOLO -->
                 <div class="item-card" style="border: 1px solid #dd6b20;" onclick="abrirModalRango('modal-apolo')">
-                    <div class="ribbon-discount">-20% DESC</div>
+                    <div class="ribbon-discount" data-product-discount="Rango Apolo (Mensual)"></div>
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <img src="img/apolo-icono.png" alt="Apolo" style="width: 50px; height: 50px; border-radius: 6px; border: 1px solid #dd6b20; object-fit: cover;">
                         <div>
@@ -247,7 +246,7 @@
                     <div>
                         <p style="color: #a0aec0; font-size: 11px; font-style: italic; margin: 0 0 10px 0; text-align: center;">"La luz brillante y la puntería infalible del dios solar."</p>
                         <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232736; padding-top: 10px;">
-                            <span style="color: #fff; font-weight: bold; font-size: 15px;">Desde $12.00 USD</span>
+                            <span style="color: #fff; font-weight: bold; font-size: 15px;" data-product-price="Rango Apolo (Mensual)" data-price-prefix="Desde " data-price-suffix=" USD"></span>
                             <span style="color: #fbd38d; font-size: 11px; font-weight: bold;">VER DETALLES &gt;</span>
                         </div>
                     </div>
@@ -266,13 +265,13 @@
                 <div style="background: #1a202c; border: 1px solid #2d3748; border-radius: 8px; padding: 14px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                         <span style="color: #f6e05e; font-weight: bold; font-size: 14px;">Plan Mensual</span>
-                        <span style="color: #fff; font-weight: bold; font-size: 15px;">$24.99 USD <span style="font-size: 11px; color: #94a3b8; font-weight: normal;">(S/. 55.00)</span></span>
+                        <span style="color: #fff; font-weight: bold; font-size: 15px;"><span data-product-price="Rango Zeus (Mensual)"></span> <span data-currency-label>USD</span></span>
                     </div>
                     <ul style="margin: 0 0 10px 0; padding-left: 18px; font-size: 11px; color: #cbd5e1; line-height: 1.4;">
                         <li>Kit Zeus mensual (Armadura Netherite completa, herramientas y armas).</li>
                         <li>Acceso a /fly en lobbies y comandos exclusivos.</li>
                     </ul>
-                    <button onclick="agregarAlCarrito('Rango Zeus (Mensual)', 24.99); cerrarModalOpciones('modal-zeus');" style="width: 100%; background: #d69e2e; color: #000; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer;">COMPRAR MENSUAL</button>
+                    <button onclick="agregarAlCarrito('Rango Zeus (Mensual)'); cerrarModalOpciones('modal-zeus');" style="width: 100%; background: #d69e2e; color: #000; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer;">COMPRAR MENSUAL</button>
                 </div>
                 <div style="background: #1a202c; border: 1px dashed #d69e2e; border-radius: 8px; padding: 10px; text-align: center;">
                     <span style="font-size: 11px; color: #f6e05e; font-weight: bold; display: block; margin-bottom: 6px; letter-spacing: 1px;">⚡ KIT EXCLUSIVO ZEUS INCLUIDO ⚡</span>
@@ -281,14 +280,14 @@
                 <div style="background: #1a202c; border: 1px solid #d69e2e; border-radius: 8px; padding: 14px; box-shadow: 0 0 15px rgba(214, 158, 46, 0.15);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                         <span style="color: #f6e05e; font-weight: bold; font-size: 14px;">Plan Permanente</span>
-                        <span style="color: #fff; font-weight: bold; font-size: 15px;">$74.99 USD <span style="font-size: 11px; color: #94a3b8; font-weight: normal;">(S/. 125.00)</span></span>
+                        <span style="color: #fff; font-weight: bold; font-size: 15px;"><span data-product-price="Rango Zeus (Permanente)"></span> <span data-currency-label>USD</span></span>
                     </div>
                     <ul style="margin: 0 0 10px 0; padding-left: 18px; font-size: 11px; color: #cbd5e1; line-height: 1.4;">
                         <li>Kit Zeus permanente (Se recibe cada 9 días con todo el equipamiento épico).</li>
                         <li>Acceso ilimitado a /fly y prioridad máxima en el servidor.</li>
                         <li>20 homes / Protecciones extendidas / Soporte prioritario.</li>
                     </ul>
-                    <button onclick="agregarAlCarrito('Rango Zeus (Permanente)', 74.99); cerrarModalOpciones('modal-zeus');" style="width: 100%; background: #d69e2e; color: #000; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer;">COMPRAR PERMANENTE</button>
+                    <button onclick="agregarAlCarrito('Rango Zeus (Permanente)'); cerrarModalOpciones('modal-zeus');" style="width: 100%; background: #d69e2e; color: #000; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer;">COMPRAR PERMANENTE</button>
                 </div>
             </div>
         </div>
@@ -304,13 +303,13 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <span style="color: #63b3ed; font-weight: bold; font-size: 15px;">Plan Mensual</span>
                         <div>
-                            <span style="color: #fff; font-weight: bold; font-size: 16px;">$20.00 USD</span>
+                            <span style="color: #fff; font-weight: bold; font-size: 16px;" data-product-price="Rango Poseidón (Mensual)" data-price-suffix=" USD"></span>
                             <span style="color: #94a3b8; font-size: 12px; margin-left: 8px;">(S/. 70.00)</span>
                         </div>
                     </div>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• El kit solo se recibe 1 vez después de su compra.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 10px 0;">• Acceso a 10 comandos / 10 homes.</p>
-                    <button style="background: #3182ce; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Poseidón (Mensual)', 20.00); cerrarModalRango('modal-poseidon');">COMPRAR MENSUAL</button>
+                    <button style="background: #3182ce; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Poseidón (Mensual)'); cerrarModalRango('modal-poseidon');">COMPRAR MENSUAL</button>
                 </div>
                 <div style="background: #181f33; border: 1px dashed #3182ce; border-radius: 8px; padding: 10px; text-align: center;">
                     <span style="font-size: 11px; color: #63b3ed; font-weight: bold; display: block; margin-bottom: 6px; letter-spacing: 1px;">🌊 KIT EXCLUSIVO POSEIDÓN INCLUIDO 🌊</span>
@@ -320,14 +319,14 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <span style="color: #63b3ed; font-weight: bold; font-size: 15px;">Plan Permanente</span>
                         <div>
-                            <span style="color: #fff; font-weight: bold; font-size: 16px;">$70.00 USD</span>
+                            <span style="color: #fff; font-weight: bold; font-size: 16px;" data-product-price="Rango Poseidón (Permanente)" data-price-suffix=" USD"></span>
                             <span style="color: #94a3b8; font-size: 12px; margin-left: 8px;">(S/. 245.00)</span>
                         </div>
                     </div>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• El kit se recibe cada 9 días después de su compra.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• Acceso a 10 comandos / Soporte de atención rápida.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 10px 0;">• 15 homes / Protección 400x400 / Apoyo builder / Aplanado 200x200 / 1 casa 50x50.</p>
-                    <button style="background: #63b3ed; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Poseidón (Permanente)', 70.00); cerrarModalRango('modal-poseidon');">COMPRAR PERMANENTE</button>
+                    <button style="background: #63b3ed; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Poseidón (Permanente)'); cerrarModalRango('modal-poseidon');">COMPRAR PERMANENTE</button>
                 </div>
             </div>
         </div>
@@ -343,13 +342,13 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <span style="color: #b794f4; font-weight: bold; font-size: 15px;">Plan Mensual</span>
                         <div>
-                            <span style="color: #fff; font-weight: bold; font-size: 16px;">$20.00 USD</span>
+                            <span style="color: #fff; font-weight: bold; font-size: 16px;" data-product-price="Rango Hades (Mensual)" data-price-suffix=" USD"></span>
                             <span style="color: #94a3b8; font-size: 12px; margin-left: 8px;">(S/. 70.00)</span>
                         </div>
                     </div>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• El kit solo se recibe 1 vez después de su compra.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 10px 0;">• Acceso a 10 comandos / 10 homes.</p>
-                    <button style="background: #805ad5; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Hades (Mensual)', 20.00); cerrarModalRango('modal-hades');">COMPRAR MENSUAL</button>
+                    <button style="background: #805ad5; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Hades (Mensual)'); cerrarModalRango('modal-hades');">COMPRAR MENSUAL</button>
                 </div>
                 <div style="background: #181f33; border: 1px dashed #805ad5; border-radius: 8px; padding: 10px; text-align: center;">
                     <span style="font-size: 11px; color: #b794f4; font-weight: bold; display: block; margin-bottom: 6px; letter-spacing: 1px;">💀 KIT EXCLUSIVO HADES INCLUIDO 💀</span>
@@ -359,14 +358,14 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <span style="color: #b794f4; font-weight: bold; font-size: 15px;">Plan Permanente</span>
                         <div>
-                            <span style="color: #fff; font-weight: bold; font-size: 16px;">$70.00 USD</span>
+                            <span style="color: #fff; font-weight: bold; font-size: 16px;" data-product-price="Rango Hades (Permanente)" data-price-suffix=" USD"></span>
                             <span style="color: #94a3b8; font-size: 12px; margin-left: 8px;">(S/. 245.00)</span>
                         </div>
                     </div>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• El kit se recibe cada 9 días después de su compra.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• Acceso a 10 comandos / Soporte de atención rápida.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 10px 0;">• 15 homes / Protección 400x400 / Apoyo builder / Aplanado 200x200 / 1 casa 50x50.</p>
-                    <button style="background: #b794f4; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Hades (Permanente)', 70.00); cerrarModalRango('modal-hades');">COMPRAR PERMANENTE</button>
+                    <button style="background: #b794f4; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Hades (Permanente)'); cerrarModalRango('modal-hades');">COMPRAR PERMANENTE</button>
                 </div>
             </div>
         </div>
@@ -382,13 +381,13 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <span style="color: #4fd1c5; font-weight: bold; font-size: 15px;">Plan Mensual</span>
                         <div>
-                            <span style="color: #fff; font-weight: bold; font-size: 16px;">$17.00 USD</span>
+                            <span style="color: #fff; font-weight: bold; font-size: 16px;" data-product-price="Rango Atenea (Mensual)" data-price-suffix=" USD"></span>
                             <span style="color: #94a3b8; font-size: 12px; margin-left: 8px;">(S/. 60.00)</span>
                         </div>
                     </div>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• El kit solo se recibe 1 vez después de su compra.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 10px 0;">• Acceso a 6 comandos / 8 homes.</p>
-                    <button style="background: #319795; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Atenea (Mensual)', 17.00); cerrarModalRango('modal-atenea');">COMPRAR MENSUAL</button>
+                    <button style="background: #319795; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Atenea (Mensual)'); cerrarModalRango('modal-atenea');">COMPRAR MENSUAL</button>
                 </div>
                 <div style="background: #181f33; border: 1px dashed #319795; border-radius: 8px; padding: 10px; text-align: center;">
                     <span style="font-size: 11px; color: #4fd1c5; font-weight: bold; display: block; margin-bottom: 6px; letter-spacing: 1px;">🛡️ KIT EXCLUSIVO ATENEA INCLUIDO 🛡️</span>
@@ -398,14 +397,14 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <span style="color: #4fd1c5; font-weight: bold; font-size: 15px;">Plan Permanente</span>
                         <div>
-                            <span style="color: #fff; font-weight: bold; font-size: 16px;">$65.00 USD</span>
+                            <span style="color: #fff; font-weight: bold; font-size: 16px;" data-product-price="Rango Atenea (Permanente)" data-price-suffix=" USD"></span>
                             <span style="color: #94a3b8; font-size: 12px; margin-left: 8px;">(S/. 230.00)</span>
                         </div>
                     </div>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• El kit se recibe cada 14 días después de su compra.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• Acceso a 6 comandos / Soporte de atención rápida.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 10px 0;">• 8 homes / Protección 300x300.</p>
-                    <button style="background: #4fd1c5; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Atenea (Permanente)', 65.00); cerrarModalRango('modal-atenea');">COMPRAR PERMANENTE</button>
+                    <button style="background: #4fd1c5; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Atenea (Permanente)'); cerrarModalRango('modal-atenea');">COMPRAR PERMANENTE</button>
                 </div>
             </div>
         </div>
@@ -421,13 +420,13 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <span style="color: #fc8181; font-weight: bold; font-size: 15px;">Plan Mensual</span>
                         <div>
-                            <span style="color: #fff; font-weight: bold; font-size: 16px;">$15.00 USD</span>
+                            <span style="color: #fff; font-weight: bold; font-size: 16px;" data-product-price="Rango Ares (Mensual)" data-price-suffix=" USD"></span>
                             <span style="color: #94a3b8; font-size: 12px; margin-left: 8px;">(S/. 53.00)</span>
                         </div>
                     </div>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• El kit solo se recibe 1 vez después de su compra.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 10px 0;">• Acceso a 5 comandos / 5 homes.</p>
-                    <button style="background: #e53e3e; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Ares (Mensual)', 15.00); cerrarModalRango('modal-ares');">COMPRAR MENSUAL</button>
+                    <button style="background: #e53e3e; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Ares (Mensual)'); cerrarModalRango('modal-ares');">COMPRAR MENSUAL</button>
                 </div>
                 <div style="background: #181f33; border: 1px dashed #e53e3e; border-radius: 8px; padding: 10px; text-align: center;">
                     <span style="font-size: 11px; color: #fc8181; font-weight: bold; display: block; margin-bottom: 6px; letter-spacing: 1px;">⚔️ KIT EXCLUSIVO ARES INCLUIDO ⚔️</span>
@@ -437,14 +436,14 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <span style="color: #fc8181; font-weight: bold; font-size: 15px;">Plan Permanente</span>
                         <div>
-                            <span style="color: #fff; font-weight: bold; font-size: 16px;">$60.00 USD</span>
+                            <span style="color: #fff; font-weight: bold; font-size: 16px;" data-product-price="Rango Ares (Permanente)" data-price-suffix=" USD"></span>
                             <span style="color: #94a3b8; font-size: 12px; margin-left: 8px;">(S/. 210.00)</span>
                         </div>
                     </div>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• El kit se recibe cada 15 días después de su compra.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• Acceso a 5 comandos / Soporte de atención rápida.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 10px 0;">• 5 homes / Protección 200x200.</p>
-                    <button style="background: #fc8181; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Ares (Permanente)', 60.00); cerrarModalRango('modal-ares');">COMPRAR PERMANENTE</button>
+                    <button style="background: #fc8181; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Ares (Permanente)'); cerrarModalRango('modal-ares');">COMPRAR PERMANENTE</button>
                 </div>
             </div>
         </div>
@@ -460,13 +459,13 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <span style="color: #fbd38d; font-weight: bold; font-size: 15px;">Plan Mensual</span>
                         <div>
-                            <span style="color: #fff; font-weight: bold; font-size: 16px;">$12.00 USD</span>
+                            <span style="color: #fff; font-weight: bold; font-size: 16px;" data-product-price="Rango Apolo (Mensual)" data-price-suffix=" USD"></span>
                             <span style="color: #94a3b8; font-size: 12px; margin-left: 8px;">(S/. 43.00)</span>
                         </div>
                     </div>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• El kit solo se recibe 1 vez después de su compra.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 10px 0;">• Acceso a 5 comandos / 5 homes.</p>
-                    <button style="background: #dd6b20; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Apolo (Mensual)', 12.00); cerrarModalRango('modal-apolo');">COMPRAR MENSUAL</button>
+                    <button style="background: #dd6b20; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Apolo (Mensual)'); cerrarModalRango('modal-apolo');">COMPRAR MENSUAL</button>
                 </div>
                 <div style="background: #181f33; border: 1px dashed #dd6b20; border-radius: 8px; padding: 10px; text-align: center;">
                     <span style="font-size: 11px; color: #fbd38d; font-weight: bold; display: block; margin-bottom: 6px; letter-spacing: 1px;">☀️ KIT EXCLUSIVO APOLO INCLUIDO ☀️</span>
@@ -476,14 +475,14 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <span style="color: #fbd38d; font-weight: bold; font-size: 15px;">Plan Permanente</span>
                         <div>
-                            <span style="color: #fff; font-weight: bold; font-size: 16px;">$50.00 USD</span>
+                            <span style="color: #fff; font-weight: bold; font-size: 16px;" data-product-price="Rango Apolo (Permanente)" data-price-suffix=" USD"></span>
                             <span style="color: #94a3b8; font-size: 12px; margin-left: 8px;">(S/. 175.00)</span>
                         </div>
                     </div>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• El kit se recibe cada 15 días después de su compra.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• Acceso a 5 comandos / Soporte de atención rápida.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 10px 0;">• 5 homes / Protección 100x100.</p>
-                    <button style="background: #fbd38d; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Apolo (Permanente)', 50.00); cerrarModalRango('modal-apolo');">COMPRAR PERMANENTE</button>
+                    <button style="background: #fbd38d; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Apolo (Permanente)'); cerrarModalRango('modal-apolo');">COMPRAR PERMANENTE</button>
                 </div>
             </div>
         </div>

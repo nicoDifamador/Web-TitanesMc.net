@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tienda Oficial - TITANES MC Network</title>
     <link rel="stylesheet" href="css/estilo.css">
-    <script src="https://www.paypal.com/sdk/js?client-id=BAAQzPha3zUtaXBZQrnyWImfSCLCloXSUecvF9jfn-5exxYWKcLGRNl4Od-2gCofs3bauC7FlSIwpSngMw&currency=USD"></script>
     <style>
         /* ================= ESTILOS DINÁMICOS ADICIONALES ================= */
         
@@ -266,7 +265,7 @@
             <div class="items-grid" style="grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
                 
                 <!-- Rango Zeus -->
-                <div class="item-card" style="background: #141722; border: 1px solid #d69e2e; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+                <div class="item-card" data-product-name="Rango Zeus" style="background: #141722; border: 1px solid #d69e2e; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
                     <span style="position: absolute; top: 12px; right: 12px; background: #d69e2e; color: #000; font-size: 9px; font-weight: bold; padding: 3px 8px; border-radius: 4px; box-shadow: 0 0 10px rgba(214,158,46,0.4);">MÁS VENDIDO</span>
                     <div>
                         <div style="text-align: center; margin-bottom: 12px;">
@@ -281,13 +280,13 @@
                         </ul>
                     </div>
                     <div class="item-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232736; padding-top: 12px; margin-top: 10px;">
-                        <span class="item-price" style="color: #fff; font-weight: bold; font-size: 16px;">$74.99 <span style="font-size:10px; color:#94a3b8;">USD</span></span>
-                        <button class="submit-btn" style="background: #d69e2e; color: #000; border: none; padding: 7px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: filter 0.2s;" onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter='none'" onclick="agregarAlCarrito('Rango Zeus', 14.99)">COMPRAR</button>
+                        <span class="item-price" style="color: #fff; font-weight: bold; font-size: 16px;"><span data-product-price="Rango Zeus"></span> <span style="font-size:10px; color:#94a3b8;" data-currency-label>USD</span></span>
+                        <button class="submit-btn" style="background: #d69e2e; color: #000; border: none; padding: 7px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: filter 0.2s;" onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter='none'" onclick="agregarProductoDestacado(this)">COMPRAR</button>
                     </div>
                 </div>
 
                 <!-- Rango Poseidón -->
-                <div class="item-card" style="background: #141722; border: 1px solid #3182ce; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+                <div class="item-card" data-product-name="Rango Poseidón" style="background: #141722; border: 1px solid #3182ce; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
                     <span style="position: absolute; top: 12px; right: 12px; background: #3182ce; color: #fff; font-size: 9px; font-weight: bold; padding: 3px 8px; border-radius: 4px;">POPULAR</span>
                     <div>
                         <div style="text-align: center; margin-bottom: 12px;">
@@ -302,13 +301,13 @@
                         </ul>
                     </div>
                     <div class="item-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232736; padding-top: 12px; margin-top: 10px;">
-                        <span class="item-price" style="color: #fff; font-weight: bold; font-size: 16px;">$69.99 <span style="font-size:10px; color:#94a3b8;">USD</span></span>
-                        <button class="submit-btn" style="background: #3182ce; color: #fff; border: none; padding: 7px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: filter 0.2s;" onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter='none'" onclick="agregarAlCarrito('Rango Poseidón', 11.99)">COMPRAR</button>
+                        <span class="item-price" style="color: #fff; font-weight: bold; font-size: 16px;"><span data-product-price="Rango Poseidón"></span> <span style="font-size:10px; color:#94a3b8;" data-currency-label>USD</span></span>
+                        <button class="submit-btn" style="background: #3182ce; color: #fff; border: none; padding: 7px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: filter 0.2s;" onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter='none'" onclick="agregarProductoDestacado(this)">COMPRAR</button>
                     </div>
                 </div>
 
                 <!-- Rango Hades -->
-                <div class="item-card" style="background: #141722; border: 1px solid #805ad5; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+                <div class="item-card" data-product-name="Rango Hades" style="background: #141722; border: 1px solid #805ad5; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
                     <span style="position: absolute; top: 12px; right: 12px; background: #805ad5; color: #fff; font-size: 9px; font-weight: bold; padding: 3px 8px; border-radius: 4px;">NUEVO</span>
                     <div>
                         <div style="text-align: center; margin-bottom: 12px;">
@@ -323,8 +322,8 @@
                         </ul>
                     </div>
                     <div class="item-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232736; padding-top: 12px; margin-top: 10px;">
-                        <span class="item-price" style="color: #fff; font-weight: bold; font-size: 16px;">$69.99 <span style="font-size:10px; color:#94a3b8;">USD</span></span>
-                        <button class="submit-btn" style="background: #805ad5; color: #fff; border: none; padding: 7px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: filter 0.2s;" onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter='none'" onclick="agregarAlCarrito('Rango Hades', 9.99)">COMPRAR</button>
+                        <span class="item-price" style="color: #fff; font-weight: bold; font-size: 16px;"><span data-product-price="Rango Hades"></span> <span style="font-size:10px; color:#94a3b8;" data-currency-label>USD</span></span>
+                        <button class="submit-btn" style="background: #805ad5; color: #fff; border: none; padding: 7px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: filter 0.2s;" onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter='none'" onclick="agregarProductoDestacado(this)">COMPRAR</button>
                     </div>
                 </div>
 

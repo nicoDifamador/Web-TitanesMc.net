@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const { leerConfiguracionTienda, calcularPrecioOrden } = require('./store-pricing');
 
 const app = express();
 app.use(express.json());
@@ -9,9 +10,76 @@ const panelConfig = {
     apiKey: process.env.PANEL_API_KEY,
     serverId: process.env.SERVER_ID || '4b02f2cb'
 };
-
 if (!panelConfig.apiKey) {
     throw new Error('PANEL_API_KEY environment variable is required');
+}
+
+function registrarCorsTienda(req, res, next) {
+    const origin = req.get('Origin');
+    if (!origin) return next();
+
+    const origenServidor = `${req.protocol}://${req.get('host')}`;
+    if (origin !== origenServidor && origin !== process.env.SITE_ORIGIN) {
+        return res.status(403).json({ error: 'Origen no autorizado' });
+    }
+    if (origin !== origenServidor) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+        res.setHeader('Vary', 'Origin');
+    }
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    if (req.method === 'OPTIONS') return res.sendStatus(204);
+    next();
+}
+
+async function crearOrdenPayPal(configuracion, total, jugador) {
+    const clientId = configuracion.paypal?.clientId;
+    const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
+    if (!clientId || !clientSecret) {
+        throw new Error('Falta configurar paypal.clientId o PAYPAL_CLIENT_SECRET');
+    }
+
+    const baseUrl = process.env.PAYPAL_MODE === 'live'
+        ? 'https://api-m.paypal.com'
+        : 'https://api-m.sandbox.paypal.com';
+    const credenciales = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+    const tokenResponse = await fetch(`${baseUrl}/v1/oauth2/token`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Basic ${credenciales}`,
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'grant_type=client_credentials'
+    });
+    const tokenResult = await tokenResponse.json();
+    if (!tokenResponse.ok || !tokenResult.access_token) {
+        throw new Error(`PayPal OAuth respondió HTTP ${tokenResponse.status}`);
+    }
+
+    const orderResponse = await fetch(`${baseUrl}/v2/checkout/orders`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${tokenResult.access_token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            intent: 'CAPTURE',
+            purchase_units: [{
+                custom_id: jugador,
+                description: 'Compra en la tienda de TITANES MC',
+                amount: {
+                    currency_code: configuracion.currency,
+                    value: total.toFixed(2)
+                }
+            }]
+        })
+    });
+    const orderResult = await orderResponse.json();
+    if (!orderResponse.ok || !orderResult.id) {
+        throw new Error(`PayPal no pudo crear la orden (HTTP ${orderResponse.status})`);
+    }
+
+    return orderResult.id;
 }
 
 async function ejecutarComandoMinecraft(comando) {
@@ -77,6 +145,31 @@ app.get('/test-rest', async (req, res) => {
         res.send(`✅ ¡Conexión exitosa con el servidor de Minecraft!`);
     } catch (error) {
         res.status(500).send(`❌ Error de red: ${error.message}`);
+    }
+});
+
+app.options('/api/paypal/orders', registrarCorsTienda);
+app.post('/api/paypal/orders', registrarCorsTienda, async (req, res) => {
+    let configuracion;
+    let total;
+    try {
+        configuracion = leerConfiguracionTienda();
+        const jugador = req.body.player;
+        if (typeof jugador !== 'string' || !/^[A-Za-z0-9_]{3,16}$/.test(jugador)) {
+            return res.status(400).json({ error: 'El nombre del jugador no es válido' });
+        }
+        const coupon = typeof req.body.coupon === 'string' ? req.body.coupon.trim().toUpperCase() : '';
+        total = calcularPrecioOrden(configuracion, req.body.items, coupon);
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+
+    try {
+        const id = await crearOrdenPayPal(configuracion, total, req.body.player);
+        return res.json({ id, total: total.toFixed(2), currency: configuracion.currency });
+    } catch (error) {
+        console.error('[PAYPAL ORDER ERROR]', error.message);
+        return res.status(502).json({ error: 'No se pudo crear la orden de PayPal' });
     }
 });
 

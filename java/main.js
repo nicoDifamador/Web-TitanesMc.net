@@ -3,6 +3,179 @@
 // =================================================================
 let carrito = JSON.parse(localStorage.getItem("titanes_cart")) || [];
 let descuentoAplicado = 0; // Porcentaje de descuento global (ej. 0.10 para 10%)
+let cuponAplicado = "";
+let configuracionTienda;
+
+const configuracionTiendaPromise = fetch("config.json")
+    .then(respuesta => {
+        if (!respuesta.ok) {
+            throw new Error(`No se pudo cargar config.json (HTTP ${respuesta.status})`);
+        }
+        return respuesta.json();
+    })
+    .then(configuracion => {
+        if (!configuracion.products || !configuracion.discounts || !configuracion.design?.colors || !configuracion.site) {
+            throw new Error("config.json no contiene productos, descuentos y diseño");
+        }
+        if (!/^[A-Z]{3}$/.test(configuracion.currency)) {
+            throw new Error("La moneda de config.json debe ser un código ISO de tres letras");
+        }
+        const descuentoGlobal = configuracion.discounts.globalPercent;
+        if (!Number.isFinite(descuentoGlobal) || descuentoGlobal < 0 || descuentoGlobal > 100) {
+            throw new Error("El descuento global de config.json debe estar entre 0 y 100");
+        }
+        for (const [nombre, producto] of Object.entries(configuracion.products)) {
+            if (!Number.isFinite(producto.price) || producto.price < 0) {
+                throw new Error(`Precio inválido en config.json para ${nombre}`);
+            }
+        }
+        for (const [nombre, porcentaje] of Object.entries(configuracion.discounts.products || {})) {
+            if (!configuracion.products[nombre] || !Number.isFinite(porcentaje) || porcentaje < 0 || porcentaje > 100) {
+                throw new Error(`Descuento por producto inválido en config.json para ${nombre}`);
+            }
+        }
+        for (const [codigo, cupon] of Object.entries(configuracion.discounts.coupons || {})) {
+            if (!Number.isFinite(cupon.percent) || cupon.percent < 0 || cupon.percent > 100) {
+                throw new Error(`Descuento inválido para el cupón ${codigo}`);
+            }
+        }
+        if (!configuracion.site.name || !configuracion.site.serverAddress || !configuracion.site.logo || !configuracion.design.fontFamily) {
+            throw new Error("Faltan datos de marca o tipografía en config.json");
+        }
+        configuracionTienda = configuracion;
+        return configuracion;
+    });
+
+configuracionTiendaPromise.catch(error => {
+    console.error("Error al cargar la configuración de la tienda:", error);
+});
+
+function obtenerPrecioConfigurado(configuracion, nombre) {
+    const producto = configuracion.products[nombre];
+    if (!producto) {
+        throw new Error(`El producto "${nombre}" no existe en config.json`);
+    }
+
+    const descuentosProducto = configuracion.discounts.products || {};
+    const porcentaje = Object.prototype.hasOwnProperty.call(descuentosProducto, nombre)
+        ? descuentosProducto[nombre]
+        : configuracion.discounts.globalPercent;
+    if (!Number.isFinite(porcentaje) || porcentaje < 0 || porcentaje > 100) {
+        throw new Error(`Descuento inválido en config.json para ${nombre}`);
+    }
+
+    return Math.round(producto.price * (1 - porcentaje / 100) * 100) / 100;
+}
+
+function formatearPrecio(valor, configuracion) {
+    return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: configuracion.currency || "USD"
+    }).format(valor);
+}
+
+let paypalSdkPromise;
+function cargarSdkPayPal(configuracion) {
+    if (window.paypal) return Promise.resolve();
+    if (paypalSdkPromise) return paypalSdkPromise;
+    if (!configuracion.paypal?.clientId) {
+        return Promise.reject(new Error("Falta paypal.clientId en config.json"));
+    }
+
+    paypalSdkPromise = new Promise((resolve, reject) => {
+        const url = new URL("https://www.paypal.com/sdk/js");
+        url.searchParams.set("client-id", configuracion.paypal.clientId);
+        url.searchParams.set("currency", configuracion.currency || "USD");
+
+        const script = document.createElement("script");
+        script.src = url.toString();
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error("No se pudo cargar el SDK de PayPal"));
+        document.head.appendChild(script);
+    });
+
+    return paypalSdkPromise;
+}
+
+function aplicarDisenoConfigurado(configuracion) {
+    const root = document.documentElement;
+    const propiedades = {
+        primary: "--site-primary",
+        background: "--site-background",
+        surface: "--site-surface",
+        text: "--site-text",
+        muted: "--site-muted",
+        border: "--site-border",
+        success: "--site-success"
+    };
+
+    for (const [clave, propiedad] of Object.entries(propiedades)) {
+        const color = configuracion.design.colors[clave];
+        if (typeof color !== "string" || !/^#[0-9a-f]{6}$/i.test(color)) {
+            throw new Error(`Color inválido en config.json: design.colors.${clave}`);
+        }
+        root.style.setProperty(propiedad, color);
+    }
+    root.style.setProperty("--site-font-family", configuracion.design.fontFamily);
+    document.querySelectorAll(".submit-btn, button[onclick*=\"agregarAlCarrito\"]").forEach(boton => {
+        boton.style.backgroundColor = configuracion.design.colors.primary;
+        boton.style.color = configuracion.design.colors.background;
+    });
+
+    document.querySelectorAll("header .logo-area img, img.logo-glow").forEach(imagen => {
+        imagen.src = configuracion.site.logo;
+        imagen.alt = `${configuracion.site.name} Logo`;
+    });
+    document.querySelectorAll(".server-title h1").forEach(titulo => {
+        titulo.textContent = configuracion.site.name;
+    });
+    document.querySelectorAll(".server-title span").forEach(subtitulo => {
+        subtitulo.textContent = configuracion.site.subtitle || "";
+    });
+    document.querySelectorAll(".site-footer .footer-col:first-child h4").forEach(titulo => {
+        titulo.textContent = `${configuracion.site.name} ${configuracion.site.subtitle || ""}`.trim();
+    });
+    document.querySelectorAll(".footer-bottom strong").forEach(titulo => {
+        titulo.textContent = configuracion.site.name;
+    });
+    document.querySelectorAll("strong").forEach(elemento => {
+        if (elemento.textContent.trim() === "Titanesmc.net") {
+            elemento.textContent = configuracion.site.serverAddress;
+        }
+    });
+    document.querySelectorAll("[data-currency-label]").forEach(elemento => {
+        elemento.textContent = configuracion.currency;
+    });
+}
+
+function obtenerPorcentajeCupon(configuracion, codigo) {
+    const cupon = configuracion.discounts.coupons?.[codigo];
+    return cupon?.enabled ? cupon.percent : null;
+}
+
+function actualizarPreciosConfigurados(configuracion) {
+    document.querySelectorAll("[data-product-price]").forEach(elemento => {
+        const nombre = elemento.dataset.productPrice;
+        const precio = obtenerPrecioConfigurado(configuracion, nombre);
+        const sufijo = (elemento.dataset.priceSuffix || "").replace("USD", configuracion.currency);
+        elemento.textContent = `${elemento.dataset.pricePrefix || ""}${formatearPrecio(precio, configuracion)}${sufijo}`;
+    });
+
+    document.querySelectorAll("[data-product-discount]").forEach(elemento => {
+        const nombre = elemento.dataset.productDiscount;
+        const producto = configuracion.products[nombre];
+        if (!producto) {
+            throw new Error(`El producto "${nombre}" del descuento no existe en config.json`);
+        }
+        const descuentosProducto = configuracion.discounts.products || {};
+        const porcentaje = Object.prototype.hasOwnProperty.call(descuentosProducto, nombre)
+            ? descuentosProducto[nombre]
+            : configuracion.discounts.globalPercent;
+        elemento.textContent = `-${porcentaje}% DESC`;
+        elemento.hidden = porcentaje <= 0;
+    });
+
+}
 
 // Limpieza preventiva si hubiera datos viejos con 'undefined' o NaN
 if (carrito.some(item => !item.name || isNaN(item.price))) {
@@ -39,23 +212,61 @@ function mostrarToast(mensaje) {
     }, 2500);
 }
 
-function agregarAlCarrito(nombre, precio) {
-    if (!nombre || isNaN(precio)) {
-        console.error("Error al agregar al producto:", { nombre, precio });
+async function agregarAlCarrito(nombre) {
+    let configuracion;
+    try {
+        configuracion = await configuracionTiendaPromise;
+    } catch (error) {
+        alert("No se pudo cargar la configuración de precios. Inténtalo más tarde.");
         return;
     }
 
-    const precioNum = parseFloat(precio);
+    let precio;
+    try {
+        precio = obtenerPrecioConfigurado(configuracion, nombre);
+    } catch (error) {
+        console.error("No se pudo agregar el producto al carrito:", error);
+        alert("Este producto no está disponible para la compra.");
+        return;
+    }
+
     const itemExistente = carrito.find(item => item.name === nombre);
     
     if (itemExistente) {
+        if (itemExistente.cantidad >= 99) {
+            alert("No se pueden agregar más de 99 unidades del mismo producto.");
+            return;
+        }
         itemExistente.cantidad += 1;
     } else {
-        carrito.push({ name: nombre, price: precioNum, cantidad: 1 });
+        carrito.push({ name: nombre, price: precio, cantidad: 1 });
     }
     
     guardarCarrito();
     mostrarToast(`✨ ¡${nombre} agregado al carrito!`);
+}
+
+function obtenerProductoDestacado(elemento) {
+    const tarjeta = elemento.closest("[data-product-name]");
+    if (!tarjeta) {
+        console.error("No se encontró la tarjeta del producto destacado.");
+        return null;
+    }
+
+    const nombre = tarjeta.dataset.productName;
+    if (!nombre) {
+        console.error("Falta el nombre del producto destacado:", tarjeta.dataset);
+        return null;
+    }
+
+    return { nombre };
+}
+
+function agregarProductoDestacado(boton) {
+    const producto = obtenerProductoDestacado(boton);
+    if (producto) {
+        agregarAlCarrito(producto.nombre);
+    }
 }
 
 function eliminarDelCarrito(nombre) {
@@ -74,10 +285,11 @@ function renderizarCarrito() {
     if (!container) return;
 
     if (carrito.length === 0) {
+        const precioCero = configuracionTienda ? formatearPrecio(0, configuracionTienda) : "$0.00";
         container.innerHTML = `<p style="color: #94a3b8; font-size: 13px; margin: 20px 0; text-align: center;">Tu carrito está vacío.</p>`;
-        if (subtotalText) subtotalText.innerHTML = `<span>Subtotal:</span> <span>$0.00</span>`;
+        if (subtotalText) subtotalText.innerHTML = `<span>Subtotal:</span> <span>${precioCero}</span>`;
         if (discountText) discountText.style.display = "none";
-        if (totalContainer) totalContainer.textContent = "$0.00";
+        if (totalContainer) totalContainer.textContent = precioCero;
         return;
     }
 
@@ -92,7 +304,7 @@ function renderizarCarrito() {
             <div class="cart-item-row" style="display: flex; justify-content: space-between; align-items: center; background: #1a202c; padding: 8px 12px; border-radius: 6px; margin-bottom: 8px;">
                 <div class="cart-item-info" style="display: flex; flex-direction: column;">
                     <span style="color: #fff; font-size: 13px; font-weight: bold;">${item.name} (x${item.cantidad})</span>
-                    <small style="color: #a0aec0; font-size: 11px;">$${itemTotal.toFixed(2)}</small>
+                    <small style="color: #a0aec0; font-size: 11px;">${configuracionTienda ? formatearPrecio(itemTotal, configuracionTienda) : `$${itemTotal.toFixed(2)}`}</small>
                 </div>
                 <div class="cart-item-actions">
                     <button class="btn-remove" onclick="eliminarDelCarrito('${nombreEscapado}')" style="background: transparent; border: none; cursor: pointer; font-size: 14px;" title="Eliminar">🗑️</button>
@@ -106,47 +318,50 @@ function renderizarCarrito() {
     let descuentoValor = subtotal * descuentoAplicado;
     let totalFinal = subtotal - descuentoValor;
 
-    if (subtotalText) subtotalText.innerHTML = `<span>Subtotal:</span> <span>$${subtotal.toFixed(2)}</span>`;
+    if (subtotalText) subtotalText.innerHTML = `<span>Subtotal:</span> <span>${configuracionTienda ? formatearPrecio(subtotal, configuracionTienda) : `$${subtotal.toFixed(2)}`}</span>`;
     
     if (descuentoAplicado > 0) {
         if (discountText) discountText.style.display = "flex";
-        if (discountAmountSpan) discountAmountSpan.textContent = `-$${descuentoValor.toFixed(2)}`;
+        if (discountAmountSpan) discountAmountSpan.textContent = `-${configuracionTienda ? formatearPrecio(descuentoValor, configuracionTienda) : `$${descuentoValor.toFixed(2)}`}`;
     } else {
         if (discountText) discountText.style.display = "none";
     }
 
-    if (totalContainer) totalContainer.textContent = `$${totalFinal.toFixed(2)}`;
+    if (totalContainer) totalContainer.textContent = configuracionTienda ? formatearPrecio(totalFinal, configuracionTienda) : `$${totalFinal.toFixed(2)}`;
 }
 
 // Sistema de cupones
-function aplicarCupon() {
+async function aplicarCupon() {
     const input = document.getElementById("coupon-input");
     if (!input) return;
     const codigo = input.value.trim().toUpperCase();
+    let configuracion;
+    try {
+        configuracion = await configuracionTiendaPromise;
+    } catch (error) {
+        alert("No se pudo cargar la configuración de descuentos. Inténtalo más tarde.");
+        return;
+    }
 
-    if (codigo === "TITANES10") {
-        descuentoAplicado = 0.10;
-        mostrarToast("🎉 ¡Cupón aplicado: 10% de descuento!");
-        renderizarCarrito();
-    } else if (codigo === "TITANES15") {
-        descuentoAplicado = 0.15;
-        mostrarToast("🎉 ¡Cupón aplicado: 15% de descuento!");
-        renderizarCarrito();
-    } else if(codigo === "TITANES100") {
-        descuentoAplicado = 1.0; // 100% de descuento
-        mostrarToast("🎉 ¡Cupón aplicado: 100% de descuento!");
-        renderizarCarrito();
-    } else {
+    const porcentaje = obtenerPorcentajeCupon(configuracion, codigo);
+    if (porcentaje === null) {
         alert("❌ Cupón inválido o expirado.");
         descuentoAplicado = 0;
+        cuponAplicado = "";
         renderizarCarrito();
+        return;
     }
+
+    descuentoAplicado = porcentaje / 100;
+    cuponAplicado = codigo;
+    mostrarToast(`🎉 ¡Cupón aplicado: ${porcentaje}% de descuento!`);
+    renderizarCarrito();
 }
 
 // =================================================================
 // PASARELA DE PAGO Y CHECKOUT (CON PAYPAL INTEGRADO)
 // =================================================================
-function procederCheckout() {
+async function procederCheckout() {
     if (carrito.length === 0) {
         alert("Tu carrito está vacío. Agrega ítems antes de proceder.");
         return;
@@ -161,40 +376,66 @@ function procederCheckout() {
 
     let subtotal = carrito.reduce((acc, item) => acc + (item.price * item.cantidad), 0);
     let totalFinal = subtotal - (subtotal * descuentoAplicado);
+    let configuracion;
+    try {
+        configuracion = await configuracionTiendaPromise;
+    } catch (error) {
+        alert("No se pudo cargar la configuración de la tienda. Inténtalo más tarde.");
+        return;
+    }
+    try {
+        await cargarSdkPayPal(configuracion);
+    } catch (error) {
+        console.error("No se pudo preparar PayPal:", error);
+        alert("No se pudo cargar PayPal. Inténtalo más tarde.");
+        return;
+    }
 
     document.getElementById("checkout-user").textContent = usuarioGuardado;
-    document.getElementById("checkout-total-text").textContent = `Total a Pagar: $${totalFinal.toFixed(2)}`;
+    document.getElementById("checkout-total-text").textContent = `Total a Pagar: ${formatearPrecio(totalFinal, configuracion)}`;
 
     document.getElementById("basket-modal").style.display = "none";
     document.getElementById("checkout-modal").style.display = "flex";
 
     // Cargar botones oficiales de PayPal dinámicamente
-    renderizarPayPal(totalFinal);
+    renderizarPayPal(usuarioGuardado, configuracion);
 }
 
 function cerrarCheckout() {
     document.getElementById("checkout-modal").style.display = "none";
 }
 
-function renderizarPayPal(totalFinal) {
+function renderizarPayPal(usuario, configuracion) {
     const container = document.getElementById("paypal-button-container");
     container.innerHTML = ""; // Limpiar botones anteriores si los hubiera
 
     if (typeof paypal !== "undefined") {
         paypal.Buttons({
-            createOrder: function(data, actions) {
-                return actions.order.create({
-                    purchase_units: [{
-                        amount: {
-                            value: totalFinal.toFixed(2)
-                        }
-                    }]
+            createOrder: async function() {
+                const endpoint = new URL("/api/paypal/orders", configuracion.apiBaseUrl || window.location.origin);
+                const respuesta = await fetch(endpoint, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        items: carrito.map(item => ({ name: item.name, quantity: item.cantidad })),
+                        coupon: cuponAplicado,
+                        player: usuario
+                    })
                 });
+                const resultado = await respuesta.json();
+                if (!respuesta.ok || !resultado.id) {
+                    throw new Error(resultado.error || "El servidor no pudo crear la orden de PayPal");
+                }
+                document.getElementById("checkout-total-text").textContent =
+                    `Total a Pagar: ${formatearPrecio(Number(resultado.total), configuracion)}`;
+                return resultado.id;
             },
             onApprove: function(data, actions) {
                 return actions.order.capture().then(function(details) {
                     alert(`✅ ¡Pago exitoso completado por ${details.payer.name.given_name}! Gracias por apoyar a TITANES MC.`);
                     carrito = [];
+                    descuentoAplicado = 0;
+                    cuponAplicado = "";
                     guardarCarrito();
                     document.getElementById("checkout-modal").style.display = "none";
                 });
@@ -284,7 +525,24 @@ function cerrarModalRango(modalId) {
 // =================================================================
 // INICIALIZACIÓN GENERAL AL CARGAR EL DOM
 // =================================================================
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        const configuracion = await configuracionTiendaPromise;
+        aplicarDisenoConfigurado(configuracion);
+        actualizarPreciosConfigurados(configuracion);
+        carrito.forEach(item => {
+            if (configuracion.products[item.name]) {
+                item.price = obtenerPrecioConfigurado(configuracion, item.name);
+            } else {
+                console.error(`El producto guardado "${item.name}" ya no existe en config.json`);
+            }
+        });
+        guardarCarrito();
+    } catch (error) {
+        console.error("No se pudo aplicar config.json:", error);
+        mostrarToast("No se pudo cargar la configuración de la tienda.");
+    }
+
     actualizarBotonSesion();
     actualizarContadorCarrito();
 
