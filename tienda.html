@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda Oficial - TITANES MC Network</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    <script src="https://www.paypal.com/sdk/js?client-id=BAAQzPha3zUtaXBZQrnyWImfSCLCloXSUecvF9jfn-5exxYWKcLGRNl4Od-2gCofs3bauC7FlSIwpSngMw&currency=USD"></script>
+    <style>
+        /* ================= ESTILOS DINÁMICOS ADICIONALES ================= */
+        
+        /* Efecto de brillo y elevación en tarjetas */
+        .item-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(212, 160, 23, 0.15);
+            border-color: #f6e05e !important;
+        }
+
+        /* Banner dinámico con animación sutil de fondo */
+        .dynamic-banner {
+            background: linear-gradient(135deg, rgba(10,12,20,0.95) 20%, rgba(19,24,39,0.8) 100%), url('img/banner.jpg') center/cover;
+            position: relative;
+            overflow: hidden;
+        }
+        .dynamic-banner::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(246,224,94,0.05) 0%, transparent 60%);
+            pointer-events: none;
+            animation: pulseGlow 6s ease-in-out infinite alternate;
+        }
+        @keyframes pulseGlow {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.15); opacity: 1; }
+        }
+
+        /* Botón de IP Copiable interactivo */
+        .ip-copy-box {
+            background: rgba(19, 24, 39, 0.9);
+            border: 1px dashed #d69e2e;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ip-copy-box:hover {
+            background: rgba(214, 158, 46, 0.1);
+        }
+
+        /* ================= ESTILOS DEL CARTEL DE MADERA VIEJA CON MOVIMIENTO ================= */
+        .wooden-sign-wrapper {
+            margin: 25px 0 15px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            transform-origin: top center;
+            animation: balancearCartel 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes balancearCartel {
+            0% { transform: rotate(1.5deg); }
+            100% { transform: rotate(-1.5deg); }
+        }
+
+        /* Cadenas superiores de sujeción */
+        .sign-chains {
+            display: flex;
+            justify-content: space-around;
+            width: 140px;
+            height: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        .sign-chain {
+            width: 4px;
+            height: 100%;
+            background: repeating-linear-gradient(
+                to bottom,
+                #4a5568,
+                #4a5568 4px,
+                #1a202c 4px,
+                #1a202c 8px
+            );
+            border-radius: 2px;
+        }
+
+        /* Tablero principal de madera vieja */
+        .wooden-board {
+            width: 100%;
+            background: linear-gradient(135deg, #3d2613 0%, #29180b 50%, #1f1207 100%);
+            border: 3px solid #5c3a21;
+            border-radius: 8px;
+            padding: 15px 12px;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8), 0 5px 15px rgba(0,0,0,0.5);
+            background-image: linear-gradient(135deg, #3d2613 0%, #29180b 50%, #1f1207 100%), 
+                              repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.15) 3px, rgba(0,0,0,0.15) 6px);
+        }
+
+        /* Remaches metálicos en las esquinas del cartel */
+        .wooden-board::before, .wooden-board::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            width: 7px;
+            height: 7px;
+            background: #cbd5e1;
+            border: 1px solid #1a202c;
+            border-radius: 50%;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.8);
+        }
+        .wooden-board::before { left: 8px; }
+        .wooden-board::after { right: 8px; }
+
+        .wooden-title {
+            color: #f6e05e;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            display: block;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+            border-bottom: 1px dashed rgba(246, 224, 94, 0.3);
+            padding-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= HEADER SUPERIOR ================= -->
+    <header class="header-container">
+        <div class="logo-area">
+            <img src="img/logo.png" alt="TITANES MC Logo">
+            <div class="server-title">
+                <h1>TITANES MC</h1>
+                <span>NETWORK</span>
+            </div>
+        </div>
+        <div class="auth-buttons">
+            <button class="btn-login" id="btn-login-user" onclick="manejarSesion()">Iniciar Sesión</button>
+            <button class="btn-basket" id="btn-basket">🛒 Carrito (0)</button>
+        </div>
+    </header>
+
+    <!-- ================= CONTENEDOR MAESTRO ================= -->
+    <main class="main-layout">
+        <!-- LATERAL IZQUIERDO -->
+        <aside class="categories-nav">
+            <a href="tienda.html" class="cat-btn active">Inicio</a>
+            <a href="protecciones.html" class="cat-btn">Protecciones</a>
+            <a href="rangos-supremos.html" class="cat-btn">Rangos Supremos</a>
+            <a href="llaves.html" class="cat-btn">Llaves de Cofres</a>
+            <a href="items.html" class="cat-btn">Ítems y Más</a>
+
+            <!-- Sección de Métodos de Pago -->
+            <div style="margin-top: 25px; border-top: 1px solid #1a2238; padding-top: 18px;">
+                <span style="font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 12px; font-weight: 700;">Métodos de Pago</span>
+                <div style="display: flex; gap: 6px; align-items: center; justify-content: space-between; background-color: #131827; padding: 10px; border-radius: 8px; border: 1px solid #1f2a44;">
+                    <div style="background: #1a202c; padding: 4px 6px; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                        <img src="img/pago/paypal.png" alt="PayPal" style="height: 14px; object-fit: contain;">
+                    </div>
+                    <div style="background: #1a202c; padding: 4px 6px; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                        <img src="img/pago/visa.png" alt="Visa" style="height: 14px; object-fit: contain;">
+                    </div>
+                    <div style="background: #1a202c; padding: 4px 6px; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                        <img src="img/pago/mastercard.png" alt="Mastercard" style="height: 14px; object-fit: contain;">
+                    </div>
+                    <div style="background: #1a202c; padding: 4px 6px; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                        <img src="img/pago/bitcoin.png" alt="Crypto" style="height: 14px; object-fit: contain;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Widget: Top Compradores con Cartel de Madera Vieja Animado -->
+            <div class="wooden-sign-wrapper">
+                <div class="sign-chains">
+                    <div class="sign-chain"></div>
+                    <div class="sign-chain"></div>
+                </div>
+                <div class="wooden-board">
+                    <span class="wooden-title">🏆 Top Compradores</span>
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <!-- Top 1 -->
+                        <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0, 0, 0, 0.45); padding: 6px 8px; border-radius: 6px; border: 1px solid #d69e2e66;">
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <span style="font-size: 11px; font-weight: bold; color: #f6e05e; width: 14px;">#1</span>
+                                <div style="width: 22px; height: 22px; background: #0f131f; border-radius: 4px; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid #d69e2e;">
+                                    <img src="https://mc-heads.net/avatar/Notch/22" alt="Skin 1" style="width: 20px; height: 20px; image-rendering: pixelated;">
+                                </div>
+                                <span style="font-size: 11px; color: #fff; font-weight: 600;">Notch</span>
+                            </div>
+                            <span style="font-size: 10px; color: #48bb78; font-weight: bold;">$45.00</span>
+                        </div>
+                        <!-- Top 2 -->
+                        <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0, 0, 0, 0.45); padding: 6px 8px; border-radius: 6px; border: 1px solid #cbd5e133;">
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <span style="font-size: 11px; font-weight: bold; color: #cbd5e1; width: 14px;">#2</span>
+                                <div style="width: 22px; height: 22px; background: #0f131f; border-radius: 4px; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid #cbd5e1;">
+                                    <img src="https://mc-heads.net/avatar/Jeb_/22" alt="Skin 2" style="width: 20px; height: 20px; image-rendering: pixelated;">
+                                </div>
+                                <span style="font-size: 11px; color: #fff; font-weight: 600;">Jeb_</span>
+                            </div>
+                            <span style="font-size: 10px; color: #48bb78; font-weight: bold;">$30.00</span>
+                        </div>
+                        <!-- Top 3 -->
+                        <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0, 0, 0, 0.45); padding: 6px 8px; border-radius: 6px; border: 1px solid #dd6b2033;">
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <span style="font-size: 11px; font-weight: bold; color: #dd6b20; width: 14px;">#3</span>
+                                <div style="width: 22px; height: 22px; background: #0f131f; border-radius: 4px; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid #dd6b20;">
+                                    <img src="https://mc-heads.net/avatar/Dinnerbone/22" alt="Skin 3" style="width: 20px; height: 20px; image-rendering: pixelated;">
+                                </div>
+                                <span style="font-size: 11px; color: #fff; font-weight: 600;">Dinnerbone</span>
+                            </div>
+                            <span style="font-size: 10px; color: #48bb78; font-weight: bold;">$15.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 15px; background: #131827; padding: 12px; border-radius: 8px; border: 1px solid #1f2a44; display: flex; align-items: center; gap: 10px;">
+                <div style="width: 8px; height: 8px; background-color: #48bb78; border-radius: 50%; box-shadow: 0 0 8px #48bb78;"></div>
+                <div>
+                    <p style="font-size: 11px; color: #3182ce; margin: 0; font-weight: bold; letter-spacing: 0.5px;">COMPRA SEGURA</p>
+                    <p style="font-size: 10px; color: #94a3b8; margin: 2px 0 0 0;">Tus datos siempre protegidos</p>
+                </div>
+            </div>
+        </aside>
+
+        <div class="content-area">
+            <div class="dynamic-banner" style="border-radius: 12px; padding: 35px; margin-bottom: 25px; border: 1px solid #2a2b36;">
+                <div style="max-width: 550px; z-index: 2; position: relative;">
+                    <span style="font-size: 11px; background: rgba(246, 224, 94, 0.15); color: #f6e05e; padding: 4px 8px; border-radius: 4px; letter-spacing: 2px; font-weight: bold; border: 1px solid rgba(246,224,94,0.3);">⚡ OFERTAS DE TEMPORADA</span>
+                    <h2 style="color: #ffffff; font-size: 28px; margin: 12px 0 8px 0; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">TITANESMC NETWORK</h2>
+                    <p style="color: #cbd5e1; font-size: 13px; line-height: 1.6; margin-bottom: 20px;">Adquiere rangos divinos, llaves y ventajas exclusivas con entrega automática instantánea al servidor.</p>
+                    
+                    <!-- Widget interactivo de IP -->
+                    <div class="ip-copy-box" onclick="navigator.clipboard.writeText('Titanesmc.net'); alert('¡IP copiada al portapapeles: Titanesmc.net!');">
+                        <span style="font-size: 14px;">🎮</span>
+                        <div>
+                            <span style="font-size: 10px; color: #94a3b8; display: block;">CONÉCTATE AHORA (CLIC PARA COPIAR)</span>
+                            <strong style="font-size: 12px; color: #f6e05e;">Titanesmc.net</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <div>
+                    <h2 style="color: #fff; font-size: 18px; display: flex; align-items: center; gap: 8px;">🔥 PAQUETES DESTACADOS</h2>
+                </div>
+                <span style="font-size: 12px; color: #94a3b8;">Los rangos más populares del servidor</span>
+            </div>
+            <div class="items-grid" style="grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
+                
+                <!-- Rango Zeus -->
+                <div class="item-card" style="background: #141722; border: 1px solid #d69e2e; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+                    <span style="position: absolute; top: 12px; right: 12px; background: #d69e2e; color: #000; font-size: 9px; font-weight: bold; padding: 3px 8px; border-radius: 4px; box-shadow: 0 0 10px rgba(214,158,46,0.4);">MÁS VENDIDO</span>
+                    <div>
+                        <div style="text-align: center; margin-bottom: 12px;">
+                            <img src="img/zeus-icon.jpg" alt="Rango Zeus" style="width: 64px; height: 64px; border-radius: 8px; border: 1px solid #d69e2e; object-fit: cover; box-shadow: 0 0 15px rgba(214, 158, 46, 0.4);">
+                            <h3 style="color: #f6e05e; font-size: 16px; margin: 8px 0 0 0;">RANGO ZEUS</h3>
+                            <span style="font-size: 10px; color: #94a3b8; letter-spacing: 1px;">[PERMANENTE]</span>
+                        </div>
+                        <ul style="font-size: 12px; color: #cbd5e1; padding-left: 15px; line-height: 1.6; margin: 15px 0;">
+                            <li>Acceso a /fly en lobbies</li>
+                            <li>Comandos y kits exclusivos</li>
+                            <li>Cosméticos de Dioses únicos</li>
+                        </ul>
+                    </div>
+                    <div class="item-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232736; padding-top: 12px; margin-top: 10px;">
+                        <span class="item-price" style="color: #fff; font-weight: bold; font-size: 16px;">$74.99 <span style="font-size:10px; color:#94a3b8;">USD</span></span>
+                        <button class="submit-btn" style="background: #d69e2e; color: #000; border: none; padding: 7px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: filter 0.2s;" onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter='none'" onclick="agregarAlCarrito('Rango Zeus', 14.99)">COMPRAR</button>
+                    </div>
+                </div>
+
+                <!-- Rango Poseidón -->
+                <div class="item-card" style="background: #141722; border: 1px solid #3182ce; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+                    <span style="position: absolute; top: 12px; right: 12px; background: #3182ce; color: #fff; font-size: 9px; font-weight: bold; padding: 3px 8px; border-radius: 4px;">POPULAR</span>
+                    <div>
+                        <div style="text-align: center; margin-bottom: 12px;">
+                            <img src="img/poseidon-icono.png" alt="Rango Poseidón" style="width: 64px; height: 64px; border-radius: 8px; border: 1px solid #3182ce; object-fit: cover; box-shadow: 0 0 15px rgba(49, 130, 206, 0.4);">
+                            <h3 style="color: #63b3ed; font-size: 16px; margin: 8px 0 0 0;">RANGO POSEIDÓN</h3>
+                            <span style="font-size: 10px; color: #94a3b8; letter-spacing: 1px;">[PERMANENTE]</span>
+                        </div>
+                        <ul style="font-size: 12px; color: #cbd5e1; padding-left: 15px; line-height: 1.6; margin: 15px 0;">
+                            <li>Acceso a /fly habilitado</li>
+                            <li>Comandos moderados</li>
+                            <li>Kits especiales acuáticos</li>
+                        </ul>
+                    </div>
+                    <div class="item-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232736; padding-top: 12px; margin-top: 10px;">
+                        <span class="item-price" style="color: #fff; font-weight: bold; font-size: 16px;">$69.99 <span style="font-size:10px; color:#94a3b8;">USD</span></span>
+                        <button class="submit-btn" style="background: #3182ce; color: #fff; border: none; padding: 7px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: filter 0.2s;" onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter='none'" onclick="agregarAlCarrito('Rango Poseidón', 11.99)">COMPRAR</button>
+                    </div>
+                </div>
+
+                <!-- Rango Hades -->
+                <div class="item-card" style="background: #141722; border: 1px solid #805ad5; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+                    <span style="position: absolute; top: 12px; right: 12px; background: #805ad5; color: #fff; font-size: 9px; font-weight: bold; padding: 3px 8px; border-radius: 4px;">NUEVO</span>
+                    <div>
+                        <div style="text-align: center; margin-bottom: 12px;">
+                            <img src="img/hades-icono.png" alt="Rango Hades" style="width: 64px; height: 64px; border-radius: 8px; border: 1px solid #805ad5; object-fit: cover; box-shadow: 0 0 15px rgba(128, 90, 213, 0.4);">
+                            <h3 style="color: #b794f4; font-size: 16px; margin: 8px 0 0 0;">RANGO HADES</h3>
+                            <span style="font-size: 10px; color: #94a3b8; letter-spacing: 1px;">[PERMANENTE]</span>
+                        </div>
+                        <ul style="font-size: 12px; color: #cbd5e1; padding-left: 15px; line-height: 1.6; margin: 15px 0;">
+                            <li>Acceso a /fly del inframundo</li>
+                            <li>Comandos exclusivos</li>
+                            <li>Cosméticos de fuego únicos</li>
+                        </ul>
+                    </div>
+                    <div class="item-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232736; padding-top: 12px; margin-top: 10px;">
+                        <span class="item-price" style="color: #fff; font-weight: bold; font-size: 16px;">$69.99 <span style="font-size:10px; color:#94a3b8;">USD</span></span>
+                        <button class="submit-btn" style="background: #805ad5; color: #fff; border: none; padding: 7px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: filter 0.2s;" onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter='none'" onclick="agregarAlCarrito('Rango Hades', 9.99)">COMPRAR</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bloques Inferiores (Rangos Supremos / Llaves) -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <a href="rangos-supremos.html" style="text-decoration: none; background: #141722; border: 1px solid #2a2b36; border-radius: 10px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; transition: 0.2s;" onmouseover="this.style.borderColor='#f6e05e'" onmouseout="this.style.borderColor='#2a2b36'">
+                    <div>
+                        <h4 style="color: #f6e05e; font-size: 14px; margin: 0;">RANGOS SUPREMOS 👑</h4>
+                        <p style="color: #94a3b8; font-size: 11px; margin: 3px 0 0 0;">El máximo poder y privilegios en el servidor</p>
+                    </div>
+                    <span style="color: #f6e05e; font-size: 16px; font-weight: bold;">&gt;</span>
+                </a>
+
+                <a href="llaves.html" style="text-decoration: none; background: #141722; border: 1px solid #2a2b36; border-radius: 10px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; transition: 0.2s;" onmouseover="this.style.borderColor='#63b3ed'" onmouseout="this.style.borderColor='#2a2b36'">
+                    <div>
+                        <h4 style="color: #63b3ed; font-size: 14px; margin: 0;">LLAVES DE COFRES 🗝️</h4>
+                        <p style="color: #94a3b8; font-size: 11px; margin: 3px 0 0 0;">Abre cofres misteriosos y consigue recompensas épicas</p>
+                    </div>
+                    <span style="color: #63b3ed; font-size: 16px; font-weight: bold;">&gt;</span>
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ================= MODALES ================= -->
+
+    <!-- Modal de Inicio de Sesión -->
+    <div class="modal-overlay" id="login-modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal" id="close-login">&times;</span>
+            <h3>Identifícate</h3>
+            <p style="color: #94a3b8; font-size: 12px; margin-bottom: 15px; text-align: center;">Ingresa tu nick exacto de Minecraft</p>
+            <form onsubmit="guardarSesion(event)">
+                <label for="input-nick">Nickname:</label>
+                <input type="text" id="input-nick" placeholder="Tu nick" required autocomplete="off">
+                <button type="submit" class="submit-btn" style="width: 100%; margin-top: 10px;">Guardar Usuario</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal del Carrito -->
+    <div class="modal-overlay" id="basket-modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal" id="close-basket">&times;</span>
+            <h3 style="color: #f6e05e; margin-bottom: 5px;">Tu Carrito de Compras</h3>
+            <p style="color: #94a3b8; font-size: 12px; margin-bottom: 15px;">Artículos seleccionados para tu cuenta</p>
+            
+            <div class="cart-items-container" id="cart-items-list">
+                <!-- Se llena mediante JS -->
+            </div>
+
+            <div class="coupon-section" style="margin: 15px 0; display: flex; gap: 8px;">
+                <input type="text" id="coupon-input" placeholder="Ej. TITANES10" style="padding: 8px; border-radius: 4px; border: 1px solid #4a5568; background: #1a202c; color: #fff; flex: 1; font-size: 13px;">
+                <button type="button" onclick="aplicarCupon()" style="padding: 8px 12px; background: #d69e2e; border: none; border-radius: 4px; color: #000; font-weight: bold; cursor: pointer;">Aplicar</button>
+            </div>
+
+            <div class="cart-total-section" style="border-top: 1px solid #2d3748; padding-top: 10px; display: flex; flex-direction: column; gap: 5px;">
+                <p id="subtotal-text" style="margin: 0; font-size: 13px; color: #a0aec0; width: 100%; display: flex; justify-content: space-between;">
+                    <span>Subtotal:</span> <span>$0.00</span>
+                </p>
+                <p id="discount-text" style="margin: 0; font-size: 13px; color: #48bb78; width: 100%; display: none; justify-content: space-between;">
+                    <span>Descuento:</span> <span id="discount-amount">-$0.00</span>
+                </p>
+                <div style="display: flex; justify-content: space-between; width: 100%; font-weight: bold; margin-top: 5px; font-size: 16px; color: #fff;">
+                    <span>Total a Pagar:</span>
+                    <span class="cart-total-price" id="cart-total-amount" style="color: #f6e05e;">$0.00</span>
+                </div>
+            </div>
+
+            <button class="submit-btn" style="width: 100%; margin-top: 15px;" onclick="procederCheckout()">FINALIZAR COMPRA</button>
+        </div>
+    </div>
+
+    <!-- Modal de Pasarela de Pago (PayPal / Tarjeta) -->
+    <div class="modal-overlay" id="checkout-modal" style="display: none;">
+        <div class="modal-content" style="background: #12141c; border: 1px solid #d69e2e; max-width: 400px;">
+            <h3 style="margin-top: 0; color: #f6e05e; border-bottom: 1px solid #2d3748; padding-bottom: 10px;">Pasarela de Pago</h3>
+            <p style="font-size: 14px; color: #a0aec0; margin: 10px 0;">Jugador destino: <strong id="checkout-user" style="color: #10b981;"></strong></p>
+            
+            <div style="background: #1a202c; padding: 12px; border-radius: 6px; margin: 15px 0;">
+                <p style="margin: 0; font-size: 14px; color: #fff;" id="checkout-total-text">Total a Pagar: $0.00</p>
+            </div>
+
+            <div id="paypal-button-container" style="margin-top: 15px;"></div>
+
+            <button type="button" onclick="cerrarCheckout()" style="width: 100%; padding: 10px; background: #4a5568; border: none; border-radius: 4px; color: #fff; font-weight: bold; cursor: pointer; margin-top: 10px;">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>TITANES MC Network</h4>
+                <p>La mejor experiencia de servidor multijugador. Explora modalidades únicas, rangos supremos y economía competitiva.</p>
+                <p style="font-size: 12px; color: #f6e05e;">IP: <strong>Titanesmc.net</strong></p>
+            </div>
+            <div class="footer-col">
+                <h4>Enlaces Rápidos</h4>
+                <ul class="footer-links">
+                    <li><a href="tienda.html">Inicio de Tienda</a></li>
+                    <li><a href="protecciones.html">Protecciones</a></li>
+                    <li><a href="rangos-supremos.html">Rangos Supremos</a></li>
+                    <li><a href="llaves.html">Llaves de Cofres</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Soporte y Legal</h4>
+                <p>¿Problemas con tu compra o entrega de objetos? Contacta con nuestro staff mediante el servidor de Discord oficial.</p>
+                <p style="font-size: 11px; font-style: italic;">No estamos afiliados a Mojang AB.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 <strong>TITANES MC</strong>. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Burbuja Flotante de Discord -->
+    <a href="https://discord.gg/DSvxS5snXB" target="_blank" class="discord-float" title="¡Únete a nuestro Discord!">
+        <img src="img/discord.png" alt="Discord de Titanes MC">
+    </a>
+
+    <!-- Archivo de control centralizado -->
+    <script src="java/main.js"></script>
+</body>
+</html>

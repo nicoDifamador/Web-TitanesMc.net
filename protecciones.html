@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protecciones - TITANES MC Network</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    <style>
+        .rank-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 7, 12, 0.85);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .rank-modal-content {
+            background: #101420;
+            border: 2px solid #2a344d;
+            border-radius: 12px;
+            padding: 30px;
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-container">
+        <div class="logo-area">
+            <img src="img/logo.png" alt="TITANES MC Logo">
+            <div class="server-title">
+                <h1>TITANES MC</h1>
+                <span>Network Store</span>
+            </div>
+        </div>
+        <div class="auth-buttons">
+            <button class="btn-login" id="btn-login-user" onclick="manejarSesion()">Iniciar Sesión</button>
+            <button class="btn-basket" id="btn-basket">🛒 Carrito (0)</button>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="categories-nav">
+            <a href="tienda.html" class="cat-btn"> Inicio</a>
+            <a href="protecciones.html" class="cat-btn active"> Protecciones</a>
+            <a href="rangos-supremos.html" class="cat-btn"> Rangos Supremos</a>
+            <a href="llaves.html" class="cat-btn"> Llaves de Cofres</a>
+            <a href="items.html" class="cat-btn"> Ítems y Kits</a>
+            <div style="margin-top: 15px; background: #131827; padding: 12px; border-radius: 8px; border: 1px solid #1f2a44; display: flex; align-items: center; gap: 10px;">
+                <div style="width: 8px; height: 8px; background-color: #48bb78; border-radius: 50%; box-shadow: 0 0 8px #48bb78;"></div>
+                <div>
+                    <p style="font-size: 11px; color: #3182ce; margin: 0; font-weight: bold; letter-spacing: 0.5px;">COMPRA SEGURA</p>
+                    <p style="font-size: 10px; color: #94a3b8; margin: 2px 0 0 0;">Tus datos siempre protegidos</p>
+                </div>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <div class="section-header">
+                <h2>PROTECCIONES VIP</h2>
+                <p>Mantén tus construcciones seguras con nuestros chunks de protección.</p>
+            </div>
+
+            <div class="items-grid">
+                <!-- PROTECCIÓN 125x125 -->
+                <div class="item-card" style="position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-align: center;">
+                    <div class="ribbon-discount">VIP</div>
+                    <div style="width: 100%;">
+                        <h3 style="color: #f6e05e; font-size: 18px; margin-bottom: 5px;">PROTECCIÓN 125x125</h3>
+                        <p style="color: #94a3b8; font-size: 12px; font-style: italic; margin-bottom: 15px;">"Ideal para iniciar tu base."</p>
+                        <div style="margin: 10px 0;">
+                            <img src="img/proteccion-125.png" alt="Protección 125x125" style="max-width: 120px; height: auto;">
+                        </div>
+                    </div>
+                    <div class="item-footer" style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+                        <span class="item-price" style="font-size: 16px; font-weight: bold;">$8.00 USD</span>
+                        <button class="submit-btn" onclick="abrirModalRango('modal-prot-125')">VER DETALLES &gt;</button>
+                    </div>
+                </div>
+
+                <!-- PROTECCIÓN 150x150 -->
+                <div class="item-card" style="position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-align: center;">
+                    <div class="ribbon-discount">VIP</div>
+                    <div style="width: 100%;">
+                        <h3 style="color: #b794f4; font-size: 18px; margin-bottom: 5px;">PROTECCIÓN 150x150</h3>
+                        <p style="color: #94a3b8; font-size: 12px; font-style: italic; margin-bottom: 15px;">"Espacio amplio para tus proyectos."</p>
+                        <div style="margin: 10px 0;">
+                            <img src="img/proteccion-150.png" alt="Protección 150x150" style="max-width: 120px; height: auto;">
+                        </div>
+                    </div>
+                    <div class="item-footer" style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+                        <span class="item-price" style="font-size: 16px; font-weight: bold;">$14.00 USD</span>
+                        <button class="submit-btn" onclick="abrirModalRango('modal-prot-150')">VER DETALLES &gt;</button>
+                    </div>
+                </div>
+
+                <!-- PROTECCIÓN 200x200 -->
+                <div class="item-card" style="position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-align: center;">
+                    <div class="ribbon-discount">VIP</div>
+                    <div style="width: 100%;">
+                        <h3 style="color: #ed8936; font-size: 18px; margin-bottom: 5px;">PROTECCIÓN 200x200</h3>
+                        <p style="color: #94a3b8; font-size: 12px; font-style: italic; margin-bottom: 15px;">"Dominio territorial avanzado."</p>
+                        <div style="margin: 10px 0;">
+                            <img src="img/proteccion-200.png" alt="Protección 200x200" style="max-width: 120px; height: auto;">
+                        </div>
+                    </div>
+                    <div class="item-footer" style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+                        <span class="item-price" style="font-size: 16px; font-weight: bold;">$25.00 USD</span>
+                        <button class="submit-btn" onclick="abrirModalRango('modal-prot-200')">VER DETALLES &gt;</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL PROTECCIÓN 125x125 -->
+    <div class="rank-modal-overlay" id="modal-prot-125" style="display: none;">
+        <div class="rank-modal-content">
+            <span onclick="cerrarModalRango('modal-prot-125')" style="position: absolute; top: 15px; right: 20px; font-size: 24px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1;">&times;</span>
+            <h2 style="color: #f6e05e; margin: 0 0 5px 0; font-size: 20px;">PROTECCIÓN 125x125 VIP</h2>
+            <p style="color: #cbd5e1; font-size: 12px; line-height: 1.5; margin-bottom: 12px;">🏛️ Terreno seguro de 125x125 bloques para proteger tus pertenencias.</p>
+            <div style="background: #181f33; padding: 15px; border-radius: 8px; border: 1px solid #d69e2e55;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="color: #f6e05e; font-weight: bold; font-size: 15px;">Terreno 125x125</span>
+                    <span style="color: #fff; font-weight: bold; font-size: 16px;">$8.00 USD</span>
+                </div>
+                <button style="background: #d69e2e; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Protección 125x125', 8.00); cerrarModalRango('modal-prot-125');">ADQUIRIR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PROTECCIÓN 150x150 -->
+    <div class="rank-modal-overlay" id="modal-prot-150" style="display: none;">
+        <div class="rank-modal-content">
+            <span onclick="cerrarModalRango('modal-prot-150')" style="position: absolute; top: 15px; right: 20px; font-size: 24px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1;">&times;</span>
+            <h2 style="color: #b794f4; margin: 0 0 5px 0; font-size: 20px;">PROTECCIÓN 150x150 VIP</h2>
+            <p style="color: #cbd5e1; font-size: 12px; line-height: 1.5; margin-bottom: 12px;">🛡️ Terreno seguro de 150x150 bloques con mayor espacio.</p>
+            <div style="background: #181f33; padding: 15px; border-radius: 8px; border: 1px solid #b794f455;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="color: #b794f4; font-weight: bold; font-size: 15px;">Terreno 150x150</span>
+                    <span style="color: #fff; font-weight: bold; font-size: 16px;">$14.00 USD</span>
+                </div>
+                <button style="background: #b794f4; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Protección 150x150', 14.00); cerrarModalRango('modal-prot-150');">ADQUIRIR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PROTECCIÓN 200x200 -->
+    <div class="rank-modal-overlay" id="modal-prot-200" style="display: none;">
+        <div class="rank-modal-content">
+            <span onclick="cerrarModalRango('modal-prot-200')" style="position: absolute; top: 15px; right: 20px; font-size: 24px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1;">&times;</span>
+            <h2 style="color: #ed8936; margin: 0 0 5px 0; font-size: 20px;">PROTECCIÓN 200x200 VIP</h2>
+            <p style="color: #cbd5e1; font-size: 12px; line-height: 1.5; margin-bottom: 12px;">👑 Terreno seguro de 200x200 bloques para bases extensas.</p>
+            <div style="background: #181f33; padding: 15px; border-radius: 8px; border: 1px solid #ed893655;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="color: #ed8936; font-weight: bold; font-size: 15px;">Terreno 200x200</span>
+                    <span style="color: #fff; font-weight: bold; font-size: 16px;">$25.00 USD</span>
+                </div>
+                <button style="background: #ed8936; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Protección 200x200', 25.00); cerrarModalRango('modal-prot-200');">ADQUIRIR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modales de Sesión y Carrito -->
+    <div class="modal-overlay" id="login-modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal" id="close-login">&times;</span>
+            <h3>Identifícate</h3>
+            <form onsubmit="guardarSesion(event)">
+                <label for="input-nick">Nickname:</label>
+                <input type="text" id="input-nick" placeholder="Tu nick" required autocomplete="off">
+                <button type="submit" class="submit-btn" style="width: 100%;">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="basket-modal" style="display: none;">
+        <div class="modal-content" style="max-width: 420px;">
+            <span class="close-modal" id="close-basket">&times;</span>
+            <h3 style="color: #f6e05e; margin-bottom: 5px;">Tu Carrito de Compras</h3>
+            <div class="cart-items-container" id="cart-items-list" style="max-height: 220px; overflow-y: auto; margin-bottom: 15px;"></div>
+            <div style="display: flex; justify-content: space-between; width: 100%; font-weight: bold; margin-top: 5px; font-size: 16px; color: #fff;">
+                <span>Total a Pagar:</span>
+                <span class="cart-total-price" id="cart-total-amount" style="color: #f6e05e;">$0.00</span>
+            </div>
+            <button class="submit-btn" style="width: 100%; margin-top: 15px;" onclick="procederCheckout()">FINALIZAR COMPRA</button>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-bottom">
+            <p>&copy; 2026 <strong>TITANES MC</strong>. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="java/main.js"></script>
+</body>
+</html>

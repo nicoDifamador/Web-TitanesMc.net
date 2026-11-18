@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Llaves de Cofres - TITANES MC Network</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    <style>
+        .items-grid-keys {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(320px, 1fr));
+            gap: 30px;
+            width: 100%;
+        }
+
+        @media (max-width: 900px) {
+            .items-grid-keys {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .key-card {
+            background: #141722;
+            border-radius: 14px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 420px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            animation: flotarLlave 4s ease-in-out infinite;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .key-card:hover {
+            transform: translateY(-6px);
+        }
+
+        @keyframes flotarLlave {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        /* EFECTOS DE PARTÍCULAS / LUCES POR LLAVE */
+        .key-zeus {
+            border: 2px solid #f6e05e;
+            box-shadow: 0 0 15px rgba(246, 224, 94, 0.2);
+        }
+        .key-zeus:hover { box-shadow: 0 0 30px rgba(246, 224, 94, 0.5); }
+
+        .key-poseidon {
+            border: 2px solid #3182ce;
+            box-shadow: 0 0 15px rgba(49, 130, 206, 0.2);
+        }
+        .key-poseidon:hover { box-shadow: 0 0 30px rgba(49, 130, 206, 0.5); }
+
+        .key-hades {
+            border: 2px solid #805ad5;
+            box-shadow: 0 0 15px rgba(128, 90, 213, 0.2);
+        }
+        .key-hades:hover { box-shadow: 0 0 30px rgba(128, 90, 213, 0.5); }
+
+        .key-amor {
+            border: 2px solid #d53f8c;
+            box-shadow: 0 0 15px rgba(213, 63, 140, 0.2);
+        }
+        .key-amor:hover { box-shadow: 0 0 30px rgba(213, 63, 140, 0.5); }
+
+        .key-img-container {
+            text-align: center;
+            margin: 10px 0;
+        }
+        .key-img-container img {
+            width: 100%;
+            max-height: 190px;
+            object-fit: contain;
+            filter: drop-shadow(0 6px 10px rgba(0,0,0,0.7));
+            transition: transform 0.3s ease;
+        }
+        .key-card:hover .key-img-container img {
+            transform: scale(1.05);
+        }
+
+        /* ESTILOS CLAVE PARA LOS MODALES FLOTANTES (CENTRADOS) */
+        .rank-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 7, 12, 0.85);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .rank-modal-content {
+            background: #101420;
+            border: 2px solid #2a344d;
+            border-radius: 12px;
+            padding: 30px;
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-container">
+        <div class="logo-area">
+            <img src="img/logo.png" alt="TITANES MC Logo">
+            <div class="server-title">
+                <h1>TITANES MC</h1>
+                <span>Network Store</span>
+            </div>
+        </div>
+        <div class="auth-buttons">
+            <button class="btn-login" id="btn-login-user" onclick="manejarSesion()">Iniciar Sesión</button>
+            <button class="btn-basket" id="btn-basket">🛒 Carrito (0)</button>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="categories-nav">
+            <a href="tienda.html" class="cat-btn"> Inicio</a>
+            <a href="protecciones.html" class="cat-btn"> Protecciones</a>
+            <a href="rangos-supremos.html" class="cat-btn"> Rangos Supremos</a>
+            <a href="llaves.html" class="cat-btn active"> Llaves </a>
+            <a href="items.html" class="cat-btn"> Ítems y Kits</a>
+            <div style="margin-top: 15px; background: #131827; padding: 12px; border-radius: 8px; border: 1px solid #1f2a44; display: flex; align-items: center; gap: 10px;">
+                <div style="width: 8px; height: 8px; background-color: #48bb78; border-radius: 50%; box-shadow: 0 0 8px #48bb78;"></div>
+                <div>
+                    <p style="font-size: 11px; color: #3182ce; margin: 0; font-weight: bold; letter-spacing: 0.5px;">COMPRA SEGURA</p>
+                    <p style="font-size: 10px; color: #94a3b8; margin: 2px 0 0 0;">Tus datos siempre protegidos</p>
+                </div>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <div class="section-header" style="margin-bottom: 25px;">
+                <h2>LLAVES DE COFRES</h2>
+                <p>Prueba tu suerte abriendo los cofres especiales ubicados en el spawn.</p>
+            </div>
+
+            <!-- GRILLA DE 2 EN 2 -->
+            <div class="items-grid-keys">
+                
+                <!-- 1. LLAVE ZEUS -->
+                <div class="key-card key-zeus" onclick="abrirModalRango('modal-llave-zeus')">
+                    <div class="ribbon-discount">-20% DESC</div>
+                    <div>
+                        <span style="color: #f6e05e; font-size: 9px; font-weight: bold; background: #d69e2e22; padding: 2px 6px; border-radius: 3px;">⚡ZEUS</span>
+                        <h3 style="color: #f6e05e; font-size: 18px; margin: 4px 0 2px 0;">LLAVE ZEUS (x1)</h3>
+                        <div class="key-img-container">
+                            <img src="img/llave_zeus.png" alt="Llave Zeus">
+                        </div>
+                        <p style="color: #94a3b8; font-size: 12px; font-style: italic; text-align: center; margin: 0;">"El poder divino del trueno en tus manos."
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232736; padding-top: 12px; margin-top: 10px;">
+                        <span style="color: #fff; font-weight: bold; font-size: 16px;">$2.50 USD</span>
+                        <span style="color: #f6e05e; font-size: 12px; font-weight: bold;">VER DETALLES &gt;</span>
+                    </div>
+                </div>
+
+                <!-- 2. LLAVE POSEIDÓN -->
+                <div class="key-card key-poseidon" onclick="abrirModalRango('modal-llave-poseidon')">
+                    <div class="ribbon-discount">-20% DESC</div>
+                    <div>
+                        <span style="color: #63b3ed; font-size: 9px; font-weight: bold; background: #3182ce22; padding: 2px 6px; border-radius: 3px;">🌊 POSEIDÓN</span>
+                        <h3 style="color: #63b3ed; font-size: 18px; margin: 4px 0 2px 0;">LLAVE POSEIDÓN (x1)</h3>
+                        <div class="key-img-container">
+                            <img src="img/llave_poseidon.png" alt="Llave Poseidón">
+                        </div>
+                        <p style="color: #94a3b8; font-size: 12px; font-style: italic; text-align: center; margin: 0;">"Las mareas profundas otorgan tesoros ocultos."</p>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232736; padding-top: 12px; margin-top: 10px;">
+                        <span style="color: #fff; font-weight: bold; font-size: 16px;">$2.50 USD</span>
+                        <span style="color: #63b3ed; font-size: 12px; font-weight: bold;">VER DETALLES &gt;</span>
+                    </div>
+                </div>
+
+                <!-- 3. LLAVE HADES -->
+                <div class="key-card key-hades" onclick="abrirModalRango('modal-llave-hades')">
+                    <div class="ribbon-discount">-20% DESC</div>
+                    <div>
+                        <span style="color: #b794f4; font-size: 9px; font-weight: bold; background: #805ad522; padding: 2px 6px; border-radius: 3px;">🔥 HADES</span>
+                        <h3 style="color: #b794f4; font-size: 18px; margin: 4px 0 2px 0;">LLAVE HADES (x1)</h3>
+                        <div class="key-img-container">
+                            <img src="img/llave_hades.png" alt="Llave Hades">
+                        </div>
+                        <p style="color: #94a3b8; font-size: 12px; font-style: italic; text-align: center; margin: 0;">"Las llamas del inframundo resguardan su riqueza."</p>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232736; padding-top: 12px; margin-top: 10px;">
+                        <span style="color: #fff; font-weight: bold; font-size: 16px;">$2.50 USD</span>
+                        <span style="color: #b794f4; font-size: 12px; font-weight: bold;">VER DETALLES &gt;</span>
+                    </div>
+                </div>
+
+                <!-- 4. LLAVE MITOLÓGICA -->
+                <div class="key-card key-amor" onclick="abrirModalRango('modal-llave-amor')">
+                    <div class="ribbon-discount">-20% DESC</div>
+                    <div>
+                        <span style="color: #f687b3; font-size: 9px; font-weight: bold; background: #d53f8c22; padding: 2px 6px; border-radius: 3px;">💖AFRODITA</span>
+                        <h3 style="color: #f687b3; font-size: 18px; margin: 4px 0 2px 0;">LLAVE MITOLÓGICA (x1)</h3>
+                        <div class="key-img-container">
+                            <img src="img/llave_afrodita.png" alt="Llave Mitológica">
+                        </div>
+                        <p style="color: #94a3b8; font-size: 12px; font-style: italic; text-align: center; margin: 0;">"La bendición de la diosa del amor y la belleza."</p>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232736; padding-top: 12px; margin-top: 10px;">
+                        <span style="color: #fff; font-weight: bold; font-size: 16px;">$4.99 USD</span>
+                        <span style="color: #f687b3; font-size: 12px; font-weight: bold;">VER DETALLES &gt;</span>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL LLAVE ZEUS -->
+    <div class="rank-modal-overlay" id="modal-llave-zeus" style="display: none;">
+        <div class="rank-modal-content">
+            <span onclick="cerrarModalRango('modal-llave-zeus')" style="position: absolute; top: 15px; right: 20px; font-size: 24px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">&times;</span>
+            <h2 style="color: #f6e05e; margin: 0 0 5px 0; font-size: 20px; padding-right: 30px;">LLAVE ZEUS</h2>
+            <p style="color: #cbd5e1; font-size: 12px; line-height: 1.5; margin-bottom: 12px;">⚡ <strong>¡Abre el cofre sagrado del Olimpo y descubre nuevos horizontes!</strong> Reclama recompensas eléctricas y domina el panteón.</p>
+            
+            <div style="background: #141824; padding: 10px 12px; border-radius: 6px; margin-bottom: 15px; border-left: 3px solid #f6e05e;">
+                <span style="font-size: 11px; color: #f6e05e; font-weight: bold; display: block; margin-bottom: 4px;">CONTENIDO PROBABLE:</span>
+                <p style="font-size: 11px; color: #94a3b8; margin: 0; line-height: 1.4;">• Herramientas legendarias con eficiencia extrema<br>• Paquetes de dinero in-game y bloques raros</p>
+            </div>
+
+            <div style="background: #181f33; padding: 15px; border-radius: 8px; border: 1px solid #d69e2e55;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="color: #f6e05e; font-weight: bold; font-size: 15px;">Pack x1 Llave Zeus</span>
+                    <span style="color: #fff; font-weight: bold; font-size: 16px;">$2.50 USD</span>
+                </div>
+                <button style="background: #d69e2e; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Llave Zeus (x1)', 2.50); cerrarModalRango('modal-llave-zeus');">ADQUIRIR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL LLAVE POSEIDÓN -->
+    <div class="rank-modal-overlay" id="modal-llave-poseidon" style="display: none;">
+        <div class="rank-modal-content">
+            <span onclick="cerrarModalRango('modal-llave-poseidon')" style="position: absolute; top: 15px; right: 20px; font-size: 24px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">&times;</span>
+            <h2 style="color: #63b3ed; margin: 0 0 5px 0; font-size: 20px; padding-right: 30px;">LLAVE POSEIDÓN</h2>
+            <p style="color: #cbd5e1; font-size: 12px; line-height: 1.5; margin-bottom: 12px;">🌊 <strong>¡Surca las profundidades del mar y descubre nuevos horizontes!</strong> El tridente te guía hacia tesoros inimaginables.</p>
+            
+            <div style="background: #141824; padding: 10px 12px; border-radius: 6px; margin-bottom: 15px; border-left: 3px solid #3182ce;">
+                <span style="font-size: 11px; color: #63b3ed; font-weight: bold; display: block; margin-bottom: 4px;">CONTENIDO PROBABLE:</span>
+                <p style="font-size: 11px; color: #94a3b8; margin: 0; line-height: 1.4;">• Armadura encantada con respiración y agilidad acuática<br>• Ítems místicos y materiales oceánicos raros</p>
+            </div>
+
+            <div style="background: #181f33; padding: 15px; border-radius: 8px; border: 1px solid #3182ce55;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="color: #63b3ed; font-weight: bold; font-size: 15px;">Pack x1 Llave Poseidón</span>
+                    <span style="color: #fff; font-weight: bold; font-size: 16px;">$2.50 USD</span>
+                </div>
+                <button style="background: #3182ce; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Llave Poseidón (x1)', 2.50); cerrarModalRango('modal-llave-poseidon');">ADQUIRIR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL LLAVE HADES -->
+    <div class="rank-modal-overlay" id="modal-llave-hades" style="display: none;">
+        <div class="rank-modal-content">
+            <span onclick="cerrarModalRango('modal-llave-hades')" style="position: absolute; top: 15px; right: 20px; font-size: 24px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">&times;</span>
+            <h2 style="color: #b794f4; margin: 0 0 5px 0; font-size: 20px; padding-right: 30px;">LLAVE HADES</h2>
+            <p style="color: #cbd5e1; font-size: 12px; line-height: 1.5; margin-bottom: 12px;">🔥 <strong>¡Atraviesa las puertas del inframundo y descubre nuevos horizontes!</strong> Reclama las riquezas ocultas del reino oscuro.</p>
+            
+            <div style="background: #141824; padding: 10px 12px; border-radius: 6px; margin-bottom: 15px; border-left: 3px solid #805ad5;">
+                <span style="font-size: 11px; color: #b794f4; font-weight: bold; display: block; margin-bottom: 4px;">CONTENIDO PROBABLE:</span>
+                <p style="font-size: 11px; color: #94a3b8; margin: 0; line-height: 1.4;">• Armas con aspecto ígneo y daño crítico superior<br>• Spawners y bloques de netherita pura</p>
+            </div>
+
+            <div style="background: #181f33; padding: 15px; border-radius: 8px; border: 1px solid #805ad555;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="color: #b794f4; font-weight: bold; font-size: 15px;">Pack x1 Llave Hades</span>
+                    <span style="color: #fff; font-weight: bold; font-size: 16px;">$2.50 USD</span>
+                </div>
+                <button style="background: #805ad5; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Llave Hades (x1)', 2.50); cerrarModalRango('modal-llave-hades');">ADQUIRIR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL LLAVE MITOLÓGICA -->
+    <div class="rank-modal-overlay" id="modal-llave-amor" style="display: none;">
+        <div class="rank-modal-content">
+            <span onclick="cerrarModalRango('modal-llave-amor')" style="position: absolute; top: 15px; right: 20px; font-size: 24px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">&times;</span>
+            <h2 style="color: #f687b3; margin: 0 0 5px 0; font-size: 20px; padding-right: 30px;">LLAVE MITOLÓGICA</h2>
+            <p style="color: #cbd5e1; font-size: 12px; line-height: 1.5; margin-bottom: 12px;">💖 <strong>¡Desbloquea la magia del panteón y descubre nuevos horizontes!</strong> La gracia de los dioses te otorgará el premio mayor.</p>
+            
+            <div style="background: #141824; padding: 10px 12px; border-radius: 6px; margin-bottom: 15px; border-left: 3px solid #d53f8c;">
+                <span style="font-size: 11px; color: #f687b3; font-weight: bold; display: block; margin-bottom: 4px;">CONTENIDO PROBABLE:</span>
+                <p style="font-size: 11px; color: #94a3b8; margin: 0; line-height: 1.4;">• Objetos ultrapoderosos y kits exclusivos de edición limitada<br>• Llaves bonus y ventajas globales de categoría suprema</p>
+            </div>
+
+            <div style="background: #181f33; padding: 15px; border-radius: 8px; border: 1px solid #d53f8c55;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="color: #f687b3; font-weight: bold; font-size: 15px;">Pack x1 Llave Mitológica</span>
+                    <span style="color: #fff; font-weight: bold; font-size: 16px;">$4.99 USD</span>
+                </div>
+                <button style="background: #d53f8c; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Llave Mitológica (x1)', 4.99); cerrarModalRango('modal-llave-amor');">ADQUIRIR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modales de Sesión y Carrito Corregidos -->
+    <div class="modal-overlay" id="login-modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal" id="close-login">&times;</span>
+            <h3>Identifícate</h3>
+            <form onsubmit="guardarSesion(event)">
+                <label for="input-nick">Nickname:</label>
+                <input type="text" id="input-nick" placeholder="Tu nick" required autocomplete="off">
+                <button type="submit" class="submit-btn" style="width: 100%;">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="basket-modal" style="display: none;">
+        <div class="modal-content" style="max-width: 420px;">
+            <span class="close-modal" id="close-basket">&times;</span>
+            <h3 style="color: #f6e05e; margin-bottom: 5px;">Tu Carrito de Compras</h3>
+            <p style="color: #94a3b8; font-size: 12px; margin-bottom: 15px;">Artículos seleccionados para tu cuenta</p>
+            
+            <!-- Contenedor dinámico corregido -->
+            <div class="cart-items-container" id="cart-items-list" style="max-height: 220px; overflow-y: auto; margin-bottom: 15px;">
+                <!-- Se llena mediante JS -->
+            </div>
+
+            <div class="coupon-section" style="margin: 15px 0; display: flex; gap: 8px;">
+                <input type="text" id="coupon-input" placeholder="Ej. TITANES10" style="padding: 8px; border-radius: 4px; border: 1px solid #4a5568; background: #1a202c; color: #fff; flex: 1; font-size: 13px;">
+                <button type="button" onclick="aplicarCupon()" style="padding: 8px 12px; background: #d69e2e; border: none; border-radius: 4px; color: #000; font-weight: bold; cursor: pointer;">Aplicar</button>
+            </div>
+
+            <div class="cart-total-section" style="border-top: 1px solid #2d3748; padding-top: 10px; display: flex; flex-direction: column; gap: 5px;">
+                <p id="subtotal-text" style="margin: 0; font-size: 13px; color: #a0aec0; width: 100%; display: flex; justify-content: space-between;">
+                    <span>Subtotal:</span> <span>$0.00</span>
+                </p>
+                <p id="discount-text" style="margin: 0; font-size: 13px; color: #48bb78; width: 100%; display: none; justify-content: space-between;">
+                    <span>Descuento:</span> <span id="discount-amount">-$0.00</span>
+                </p>
+                <div style="display: flex; justify-content: space-between; width: 100%; font-weight: bold; margin-top: 5px; font-size: 16px; color: #fff;">
+                    <span>Total a Pagar:</span>
+                    <span class="cart-total-price" id="cart-total-amount" style="color: #f6e05e;">$0.00</span>
+                </div>
+            </div>
+
+            <button class="submit-btn" style="width: 100%; margin-top: 15px;" onclick="procederCheckout()">FINALIZAR COMPRA</button>
+        </div>
+    </div>
+
+    <!-- Burbuja Flotante de Discord -->
+    <a href="https://discord.gg/DSvxS5snXB" target="_blank" class="discord-float" title="¡Únete a nuestro Discord!">
+        <img src="img/discord.png" alt="Discord de Titanes MC">
+    </a>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>TITANES MC Network</h4>
+                <p>La mejor experiencia de servidor multijugador. Explora modalidades únicas, rangos supremos y economía competitiva.</p>
+                <p style="font-size: 12px; color: #f6e05e;">IP: <strong>Titanesmc.net</strong></p>
+            </div>
+            <div class="footer-col">
+                <h4>Enlaces Rápidos</h4>
+                <ul class="footer-links">
+                    <li><a href="tienda.html">Inicio de Tienda</a></li>
+                    <li><a href="protecciones.html">Protecciones</a></li>
+                    <li><a href="rangos-supremos.html">Rangos Supremos</a></li>
+                    <li><a href="llaves.html">Llaves de Cofres</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Soporte y Legal</h4>
+                <p>¿Problemas con tu compra o entrega de objetos? Contacta con nuestro staff mediante el servidor de Discord oficial.</p>
+                <p style="font-size: 11px; font-style: italic;">No estamos afiliados a Mojang AB.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 <strong>TITANES MC</strong>. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="java/main.js"></script>
+</body>
+</html>

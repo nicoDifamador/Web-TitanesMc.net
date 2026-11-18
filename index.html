@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargando - TITANES MC Network</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #0b0f19;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: monospace;
+            cursor: pointer;
+        }
+
+        .loading-container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .logo-glow {
+            width: 410px;
+            height: 410px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 25px rgba(246, 224, 94, 0.35));
+            animation: flotarLogo 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes flotarLogo {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-8px); }
+        }
+
+        .spinner {
+            width: 39px;
+            height: 39px;
+            border: 3px solid rgba(246, 224, 94, 0.2);
+            border-top: 3px solid #f6e05e;
+            border-radius: 70%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #f6e05e;
+            font-size: 23px;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+        .discord-float {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 99;
+            width: 50px;
+            height: 50px;
+            background-color: #5865F2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s ease;
+        }
+        .discord-float:hover {
+            transform: scale(1.1);
+        }
+        .discord-float img {
+            width: 26px;
+            height: 26px;
+            object-fit: contain;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body onclick="entrarTienda()">
+
+    <div class="loading-container">
+        <img src="img/logo.png" alt="TITANES MC Logo" class="logo-glow">
+        
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 5px;">
+            <div class="spinner"></div>
+            <span class="loading-text">INVOCANDO TIENDA...</span>
+        </div>
+    </div>
+
+    <a href="https://discord.gg/DSvxS5snXB" target="_blank" class="discord-float" title="¡Únete a nuestro Discord!" onclick="event.stopPropagation()">
+        <img src="img/discord.png" alt="Discord">
+    </a>
+
+    <script>
+        function entrarTienda() {
+            window.location.href = "tienda.html";
+        }
+
+        setTimeout(() => {
+            entrarTienda();
+        }, 2000);
+    </script>
+</body>
+</html>
