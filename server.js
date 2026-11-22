@@ -123,6 +123,11 @@ const productosTienda = {
     "protección 200x200": { tipo: "proteccion", formato: "&#ED8936&lPROTECCIÓN ESCOMBRO (200x200)", ejecutar: (nick) => `ps give ${nick} 200x200` }
 };
 
+function esNombreJugadorValido(nombre) {
+    return typeof nombre === 'string' && nombre.length >= 3 &&
+        nombre.length <= 16 && /^[A-Za-z0-9_]+$/.test(nombre);
+}
+
 app.options('/api/paypal/orders', registrarCorsTienda);
 app.post('/api/paypal/orders', registrarCorsTienda, async (req, res) => {
     let configuracion;
@@ -130,6 +135,9 @@ app.post('/api/paypal/orders', registrarCorsTienda, async (req, res) => {
     try {
         configuracion = leerConfiguracionTienda();
         const jugador = req.body.player;
+        if (!esNombreJugadorValido(jugador)) {
+            return res.status(400).json({ error: 'El nombre del jugador no es válido' });
+        }
         const coupon = typeof req.body.coupon === 'string' ? req.body.coupon.trim().toUpperCase() : '';
         total = calcularPrecioOrden(configuracion, req.body.items, coupon);
     } catch (error) {
@@ -152,7 +160,10 @@ app.post('/webhook/paypal', async (req, res) => {
     if (evento.event_type === 'CHECKOUT.ORDER.APPROVED' || evento.event_type === 'PAYMENT.CAPTURE.COMPLETED') {
         const detallesPago = evento.resource || {};
         
-        const nickJugador = detallesPago.custom_id || "Mxpex_";
+        const nickJugador = detallesPago.custom_id;
+        if (!esNombreJugadorValido(nickJugador)) {
+            return res.status(400).json({ error: 'El nombre del jugador no es válido' });
+        }
         let inputItem = (detallesPago.item_name || "protección 125x125").toLowerCase();
 
         let producto = productosTienda[inputItem] || productosTienda["protección 125x125"];
