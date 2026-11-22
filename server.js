@@ -21,14 +21,19 @@ const {
 const app = express();
 app.use(express.json());
 
+function leerSecretoObligatorio(nombre) {
+    const valor = process.env[nombre];
+    if (!valor || /^replace_with_/i.test(valor)) {
+        throw new Error(`${nombre} environment variable is required and cannot use a placeholder`);
+    }
+    return valor;
+}
+
 const panelConfig = {
     host: process.env.PANEL_HOST || 'http://2.26.161.71',
-    apiKey: process.env.PANEL_API_KEY,
+    apiKey: leerSecretoObligatorio('PANEL_API_KEY'),
     serverId: process.env.SERVER_ID || '4b02f2cb'
 };
-if (!panelConfig.apiKey) {
-    throw new Error('PANEL_API_KEY environment variable is required');
-}
 
 function registrarCorsTienda(req, res, next) {
     const origin = req.get('Origin');
