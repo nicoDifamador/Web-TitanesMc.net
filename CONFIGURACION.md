@@ -24,6 +24,8 @@ El catálogo y los descuentos del navegador solo sirven para mostrar la tienda. 
 - `PAYPAL_CLIENT_SECRET` y `PANEL_API_KEY` son secretos: guárdalos en las variables de entorno del servidor, nunca en `config.json` ni en archivos públicos.
 - `PAYPAL_MODE` debe ser `sandbox` para pruebas o `live` para cobros reales.
 - `PAYPAL_WEBHOOK_ID` identifica el webhook registrado en PayPal y `PAYPAL_MERCHANT_ID` identifica la cuenta receptora. Ambos son necesarios para validar las capturas antes de entregar productos.
+- `AUTO_DELIVERY_ENABLED` queda en `false` por defecto. Con ese valor se verifican y registran los pagos, pero no se envían comandos a Minecraft y `PANEL_API_KEY` no es necesario para arrancar ni crear órdenes.
+- Para activar la entrega, usa `AUTO_DELIVERY_ENABLED=true` y configura `PANEL_HOST` con HTTPS, `PANEL_API_KEY` y `SERVER_ID`. El servidor se negará a arrancar si esas credenciales faltan o usan placeholders.
 
 Consulta `.env.example` para ver las variables requeridas por el backend.
 
@@ -32,5 +34,5 @@ Consulta `.env.example` para ver las variables requeridas por el backend.
 Desde la raíz del repositorio, con Node.js 22 o posterior:
 
 1. Ejecuta `npm ci` para instalar las versiones registradas en `package-lock.json`.
-2. Copia `.env.example` a `.env` y completa las variables para tu entorno, incluidos `PANEL_API_KEY` y `PAYPAL_CLIENT_SECRET`. Configura también `paypal.clientId` en `config.json` para el mismo entorno de PayPal.
+2. Copia `.env.example` a `.env` y completa las variables de PayPal. Configura también `paypal.clientId` en `config.json` para el mismo entorno. Las credenciales del panel sólo son obligatorias si activas la entrega automática.
 3. Ejecuta `npm test` para verificar el backend y `npm start` para arrancarlo.
