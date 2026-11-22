@@ -123,31 +123,6 @@ const productosTienda = {
     "protección 200x200": { tipo: "proteccion", formato: "&#ED8936&lPROTECCIÓN ESCOMBRO (200x200)", ejecutar: (nick) => `ps give ${nick} 200x200` }
 };
 
-// Ruta REST de prueba
-app.get('/test-rest', async (req, res) => {
-    const url = `${panelConfig.host}/api/client/servers/${panelConfig.serverId}/command`;
-    try {
-        const respuesta = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${panelConfig.apiKey}`,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ command: 'say ¡Prueba de conexión exitosa!' })
-        });
-
-        if (!respuesta.ok) {
-            const errorText = await respuesta.text();
-            return res.status(500).send(`❌ Error de la API (HTTP ${respuesta.status}): ${errorText}`);
-        }
-
-        res.send(`✅ ¡Conexión exitosa con el servidor de Minecraft!`);
-    } catch (error) {
-        res.status(500).send(`❌ Error de red: ${error.message}`);
-    }
-});
-
 app.options('/api/paypal/orders', registrarCorsTienda);
 app.post('/api/paypal/orders', registrarCorsTienda, async (req, res) => {
     let configuracion;
@@ -155,9 +130,6 @@ app.post('/api/paypal/orders', registrarCorsTienda, async (req, res) => {
     try {
         configuracion = leerConfiguracionTienda();
         const jugador = req.body.player;
-        if (typeof jugador !== 'string' || !/^[A-Za-z0-9_]{3,16}$/.test(jugador)) {
-            return res.status(400).json({ error: 'El nombre del jugador no es válido' });
-        }
         const coupon = typeof req.body.coupon === 'string' ? req.body.coupon.trim().toUpperCase() : '';
         total = calcularPrecioOrden(configuracion, req.body.items, coupon);
     } catch (error) {
@@ -180,7 +152,7 @@ app.post('/webhook/paypal', async (req, res) => {
     if (evento.event_type === 'CHECKOUT.ORDER.APPROVED' || evento.event_type === 'PAYMENT.CAPTURE.COMPLETED') {
         const detallesPago = evento.resource || {};
         
-        let nickJugador = detallesPago.custom_id || "Mxpex_";
+        const nickJugador = detallesPago.custom_id || "Mxpex_";
         let inputItem = (detallesPago.item_name || "protección 125x125").toLowerCase();
 
         let producto = productosTienda[inputItem] || productosTienda["protección 125x125"];
@@ -201,7 +173,11 @@ app.post('/webhook/paypal', async (req, res) => {
     res.status(200).send('OK');
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`🚀 Servidor backend corriendo en puerto ${PORT}`);
-});
+if (require.main === module) {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log(`🚀 Servidor backend corriendo en puerto ${PORT}`);
+    });
+}
+
+module.exports = app;
