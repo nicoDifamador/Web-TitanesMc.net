@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" role="img" aria-labelledby="title">
+  <title id="title">Baúl de monedas</title>
+  <defs><linearGradient id="wood" x2="0" y2="1"><stop stop-color="#b77932"/><stop offset="1" stop-color="#633414"/></linearGradient></defs>
+  <path d="M25 45h110v55H25z" fill="url(#wood)" stroke="#f6e05e" stroke-width="5" rx="8"/>
+  <path d="M25 48c0-25 18-35 55-35s55 10 55 35" fill="#8b5424" stroke="#f6e05e" stroke-width="5"/>
+  <path d="M75 22v76M30 63h90" stroke="#4a250f" stroke-width="5" opacity=".75"/>
+  <circle cx="75" cy="63" r="9" fill="#f6e05e" stroke="#633414" stroke-width="4"/>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 180" role="img" aria-labelledby="title">
+  <title id="title">Cartel de madera</title>
+  <defs><linearGradient id="wood" x2="0" y2="1"><stop stop-color="#a96932"/><stop offset=".5" stop-color="#7d461f"/><stop offset="1" stop-color="#4b2815"/></linearGradient></defs>
+  <rect x="8" y="8" width="484" height="164" rx="16" fill="url(#wood)" stroke="#d8a05d" stroke-width="8"/>
+  <path d="M25 50c80-25 130 25 210 0s130 25 240 0M25 115c80-25 130 25 210 0s130 25 240 0" fill="none" stroke="#4b2815" stroke-width="7" opacity=".6"/>
+</svg>

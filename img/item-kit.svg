@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" role="img" aria-labelledby="title">
+  <title id="title">Kit de supervivencia</title>
+  <path d="M25 38h110v68H25z" fill="#34495e" stroke="#63b3ed" stroke-width="5" rx="8"/>
+  <path d="M45 38v-9c0-7 5-12 12-12h46c7 0 12 5 12 12v9" fill="none" stroke="#63b3ed" stroke-width="6"/>
+  <path d="M25 62h110M75 38v68" stroke="#192535" stroke-width="5"/>
+  <path d="M62 76h26M75 63v26" stroke="#f6e05e" stroke-width="7" stroke-linecap="round"/>
+</svg>
