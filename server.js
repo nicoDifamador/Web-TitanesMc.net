@@ -1,6 +1,13 @@
 require('dotenv').config();
 const express = require('express');
 const { leerConfiguracionTienda, calcularPrecioOrden } = require('./store-pricing');
+const {
+    iniciarEntrega,
+    obtenerEntrega,
+    registrarComandoEntregado,
+    completarEntrega,
+    fallarEntrega
+} = require('./payment-store');
 
 const app = express();
 app.use(express.json());
@@ -170,14 +177,43 @@ app.post('/webhook/paypal', async (req, res) => {
 
         console.log(`✅ Procesando compra de protección para ${nickJugador} -> Producto: ${inputItem}`);
 
-        // Ejecutar comando de entrega de la protección física
-        await ejecutarComandoMinecraft(producto.ejecutar(nickJugador));
+        const eventId = evento.id || detallesPago.id;
+        let entrega;
+        try {
+            entrega = iniciarEntrega({
+                eventId,
+                captureId: detallesPago.id,
+                orderId: detallesPago.supplementary_data?.related_ids?.order_id,
+                player: nickJugador,
+                productKey: inputItem
+            });
+        } catch (error) {
+            console.error('[PAYMENT STATE ERROR]', error.message);
+            return res.status(500).json({ error: 'No se pudo registrar el evento de pago' });
+        }
+        if (entrega.duplicate) return res.status(200).send('DUPLICATE');
 
-        // Enviar anuncio broadcast en el servidor específico para la protección adquirida
-        if (producto.tipo === "rango") {
-            await ejecutarComandoMinecraft(`broadcast &e¡El jugador &6${nickJugador} &eha adquirido el rango permanente ${producto.formato} &een la tienda!`);
-        } else {
-            await ejecutarComandoMinecraft(`broadcast &e¡El jugador &6${nickJugador} &eha adquirido la ${producto.formato} &een la tienda!`);
+        const estadoEntrega = obtenerEntrega(entrega.eventKey);
+        try {
+            // Ejecutar comando de entrega de la protección física
+            if (estadoEntrega.nextCommand < 1) {
+                await ejecutarComandoMinecraft(producto.ejecutar(nickJugador));
+                registrarComandoEntregado(entrega.eventKey, 1);
+            }
+
+            // Enviar anuncio broadcast en el servidor específico para la protección adquirida
+            if (estadoEntrega.nextCommand < 2) {
+                if (producto.tipo === "rango") {
+                    await ejecutarComandoMinecraft(`broadcast &e¡El jugador &6${nickJugador} &eha adquirido el rango permanente ${producto.formato} &een la tienda!`);
+                } else {
+                    await ejecutarComandoMinecraft(`broadcast &e¡El jugador &6${nickJugador} &eha adquirido la ${producto.formato} &een la tienda!`);
+                }
+                registrarComandoEntregado(entrega.eventKey, 2);
+            }
+            completarEntrega(entrega.eventKey);
+        } catch (error) {
+            fallarEntrega(entrega.eventKey, error);
+            return res.status(503).json({ error: 'La entrega está pendiente de reintento' });
         }
     }
 
