@@ -177,6 +177,18 @@ function actualizarPreciosConfigurados(configuracion) {
 
 }
 
+function sincronizarPreciosCarrito(configuracion) {
+    carrito = carrito.filter(item => {
+        if (!configuracion.products[item.name]) {
+            console.error(`El producto guardado "${item.name}" ya no existe en config.json`);
+            return false;
+        }
+        item.price = obtenerPrecioConfigurado(configuracion, item.name);
+        return true;
+    });
+    guardarCarrito();
+}
+
 // Limpieza preventiva si hubiera datos viejos con 'undefined' o NaN
 if (carrito.some(item => !item.name || isNaN(item.price))) {
     carrito = [];
@@ -530,14 +542,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const configuracion = await configuracionTiendaPromise;
         aplicarDisenoConfigurado(configuracion);
         actualizarPreciosConfigurados(configuracion);
-        carrito.forEach(item => {
-            if (configuracion.products[item.name]) {
-                item.price = obtenerPrecioConfigurado(configuracion, item.name);
-            } else {
-                console.error(`El producto guardado "${item.name}" ya no existe en config.json`);
-            }
-        });
-        guardarCarrito();
+        sincronizarPreciosCarrito(configuracion);
     } catch (error) {
         console.error("No se pudo aplicar config.json:", error);
         mostrarToast("No se pudo cargar la configuración de la tienda.");
