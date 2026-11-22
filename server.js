@@ -92,26 +92,39 @@ async function crearOrdenPayPal(configuracion, total, jugador) {
 async function ejecutarComandoMinecraft(comando) {
     const url = `${panelConfig.host}/api/client/servers/${panelConfig.serverId}/command`;
 
-    try {
-        const respuesta = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${panelConfig.apiKey}`,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ command: comando })
-        });
+    const maxIntentos = Number.parseInt(process.env.PANEL_RETRY_ATTEMPTS || '3', 10);
+    const timeoutMs = Number.parseInt(process.env.PANEL_REQUEST_TIMEOUT_MS || '10000', 10);
+    let ultimoError;
+    for (let intento = 1; intento <= Math.max(1, maxIntentos); intento += 1) {
+        try {
+            const respuesta = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${panelConfig.apiKey}`,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ command: comando }),
+                signal: AbortSignal.timeout(timeoutMs)
+            });
 
-        if (!respuesta.ok) {
-            const errorText = await respuesta.text();
-            throw new Error(`HTTP ${respuesta.status}: ${errorText}`);
+            if (!respuesta.ok) {
+                const errorText = await respuesta.text();
+                throw new Error(`HTTP ${respuesta.status}: ${errorText}`);
+            }
+
+            console.log(`[PANEL API] Comando ejecutado en consola: "${comando}"`);
+            return;
+        } catch (error) {
+            ultimoError = error;
+            console.error(`[PANEL ERROR] Intento ${intento}/${maxIntentos}:`, error.message);
+            if (intento < Math.max(1, maxIntentos)) {
+                await new Promise((resolve) => setTimeout(resolve, Math.min(250 * intento, 1000)));
+            }
         }
-
-        console.log(`[PANEL API] Comando ejecutado en consola: "${comando}"`);
-    } catch (error) {
-        console.error('[PANEL ERROR] Falló la ejecución del comando:', error.message);
     }
+
+    throw new Error(`No se pudo entregar el comando al panel: ${ultimoError.message}`);
 }
 
 // Diccionario unificado enfocado en las Protecciones VIP y Rangos por si acaso

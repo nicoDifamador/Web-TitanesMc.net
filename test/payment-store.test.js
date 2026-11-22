@@ -27,6 +27,14 @@ test('payment events remain unique and completed deliveries survive a process re
         assert.equal(store.obtenerOrden('order-1').total, '4.99');
         assert.equal(store.obtenerEntrega(first.eventKey).status, 'completed');
         assert.ok(JSON.parse(fs.readFileSync(stateFile, 'utf8')).events['event-1']);
+
+        const failed = store.iniciarEntrega({ eventId: 'event-2', captureId: 'capture-3', player: 'Jugador', productKey: 'baul' });
+        store.registrarComandoEntregado(failed.eventKey, 1);
+        store.fallarEntrega(failed.eventKey, new Error('panel timeout'));
+        const retry = store.iniciarEntrega({ eventId: 'event-2', captureId: 'capture-3' });
+        assert.equal(retry.duplicate, false);
+        assert.equal(retry.event.nextCommand, 1);
+        assert.equal(retry.event.attempts, 2);
     } finally {
         if (previousStateFile === undefined) delete process.env.PAYMENT_STATE_FILE;
         else process.env.PAYMENT_STATE_FILE = previousStateFile;
