@@ -23,6 +23,7 @@ El catálogo y los descuentos del navegador solo sirven para mostrar la tienda. 
 - Configura `SITE_ORIGIN` en el entorno del backend con el origen exacto de la web.
 - `PAYPAL_CLIENT_SECRET` y `PANEL_API_KEY` son secretos: guárdalos en las variables de entorno del servidor, nunca en `config.json` ni en archivos públicos.
 - `PAYPAL_MODE` debe ser `sandbox` para pruebas o `live` para cobros reales.
+- `PAYPAL_WEBHOOK_ID` identifica el webhook registrado en PayPal y `PAYPAL_MERCHANT_ID` identifica la cuenta receptora. Ambos son necesarios para validar las capturas antes de entregar productos.
 
 Consulta `.env.example` para ver las variables requeridas por el backend.
 

@@ -44,7 +44,10 @@ test('rejects invalid player names before contacting payment or the panel', asyn
                 body: JSON.stringify(body)
             });
             assert.equal(response.status, 400);
-            assert.deepEqual(await response.json(), { error: 'El nombre del jugador no es válido' });
+            const result = await response.json();
+            if (path === '/api/paypal/orders' || player !== undefined) {
+                assert.deepEqual(result, { error: 'El nombre del jugador no es válido' });
+            }
         }
     }
 });

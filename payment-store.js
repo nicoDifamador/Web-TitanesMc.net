@@ -40,6 +40,14 @@ function obtenerOrden(orderId) {
     return readState().orders[orderId] || null;
 }
 
+function actualizarOrden(orderId, changes) {
+    const state = readState();
+    if (!state.orders[orderId]) throw new Error(`No existe la orden de PayPal ${orderId}`);
+    state.orders[orderId] = { ...state.orders[orderId], ...changes, updatedAt: new Date().toISOString() };
+    writeState(state);
+    return state.orders[orderId];
+}
+
 function iniciarEntrega({ eventId, captureId, orderId, player, productKey }) {
     const uniqueKeys = [eventId, captureId].filter(Boolean);
     if (uniqueKeys.length === 0) throw new Error('Falta un identificador único del evento de PayPal');
@@ -113,6 +121,7 @@ function fallarEntrega(eventKey, error) {
 module.exports = {
     guardarOrden,
     obtenerOrden,
+    actualizarOrden,
     iniciarEntrega,
     obtenerEntrega,
     registrarComandoEntregado,

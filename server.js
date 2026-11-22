@@ -3,6 +3,14 @@ const express = require('express');
 const { leerConfiguracionTienda, calcularPrecioOrden } = require('./store-pricing');
 const { obtenerProducto, normalizarSku } = require('./delivery-catalog');
 const {
+    obtenerTokenPayPal,
+    verificarFirmaWebhookPayPal,
+    verificarCapturaPayPal
+} = require('./paypal');
+const {
+    guardarOrden,
+    obtenerOrden,
+    actualizarOrden,
     iniciarEntrega,
     obtenerEntrega,
     registrarComandoEntregado,
@@ -40,34 +48,15 @@ function registrarCorsTienda(req, res, next) {
     next();
 }
 
-async function crearOrdenPayPal(configuracion, total, jugador) {
-    const clientId = configuracion.paypal?.clientId;
-    const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
-    if (!clientId || !clientSecret) {
-        throw new Error('Falta configurar paypal.clientId o PAYPAL_CLIENT_SECRET');
-    }
-
+async function crearOrdenPayPal(configuracion, total, jugador, items, coupon) {
+    const token = await obtenerTokenPayPal(configuracion);
     const baseUrl = process.env.PAYPAL_MODE === 'live'
         ? 'https://api-m.paypal.com'
         : 'https://api-m.sandbox.paypal.com';
-    const credenciales = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-    const tokenResponse = await fetch(`${baseUrl}/v1/oauth2/token`, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Basic ${credenciales}`,
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: 'grant_type=client_credentials'
-    });
-    const tokenResult = await tokenResponse.json();
-    if (!tokenResponse.ok || !tokenResult.access_token) {
-        throw new Error(`PayPal OAuth respondió HTTP ${tokenResponse.status}`);
-    }
-
     const orderResponse = await fetch(`${baseUrl}/v2/checkout/orders`, {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${tokenResult.access_token}`,
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -87,6 +76,14 @@ async function crearOrdenPayPal(configuracion, total, jugador) {
         throw new Error(`PayPal no pudo crear la orden (HTTP ${orderResponse.status})`);
     }
 
+    guardarOrden(orderResult.id, {
+        player: jugador,
+        items: items.map((item) => ({ name: item.name, quantity: item.quantity })),
+        coupon,
+        total: total.toFixed(2),
+        currency: configuracion.currency,
+        status: 'created'
+    });
     return orderResult.id;
 }
 
@@ -150,7 +147,7 @@ app.post('/api/paypal/orders', registrarCorsTienda, async (req, res) => {
     }
 
     try {
-        const id = await crearOrdenPayPal(configuracion, total, req.body.player);
+        const id = await crearOrdenPayPal(configuracion, total, req.body.player, req.body.items, coupon);
         return res.json({ id, total: total.toFixed(2), currency: configuracion.currency });
     } catch (error) {
         console.error('[PAYPAL ORDER ERROR]', error.message);
@@ -161,54 +158,104 @@ app.post('/api/paypal/orders', registrarCorsTienda, async (req, res) => {
 // Webhook para procesar las compras de PayPal
 app.post('/webhook/paypal', async (req, res) => {
     const evento = req.body;
+    const detallesPago = evento.resource || {};
+    const jugadorReportado = detallesPago.custom_id;
+    if (jugadorReportado !== undefined && !esNombreJugadorValido(jugadorReportado)) {
+        return res.status(400).json({ error: 'El nombre del jugador no es válido' });
+    }
 
-    if (evento.event_type === 'CHECKOUT.ORDER.APPROVED' || evento.event_type === 'PAYMENT.CAPTURE.COMPLETED') {
-        const detallesPago = evento.resource || {};
-        
-        const nickJugador = detallesPago.custom_id;
-        if (!esNombreJugadorValido(nickJugador)) {
-            return res.status(400).json({ error: 'El nombre del jugador no es válido' });
+    if (evento.event_type === 'CHECKOUT.ORDER.APPROVED') {
+        const orderId = detallesPago.id;
+        if (!orderId || !obtenerOrden(orderId)) {
+            return res.status(400).json({ error: 'Orden de PayPal desconocida' });
         }
-        const inputItem = normalizarSku(detallesPago.item_name);
-        const producto = obtenerProducto(inputItem);
-        if (!producto) {
-            return res.status(400).json({ error: 'SKU de producto no reconocido' });
-        }
-
-        console.log(`✅ Procesando compra de protección para ${nickJugador} -> Producto: ${inputItem}`);
-
-        const eventId = evento.id || detallesPago.id;
-        let entrega;
         try {
-            entrega = iniciarEntrega({
-                eventId,
-                captureId: detallesPago.id,
-                orderId: detallesPago.supplementary_data?.related_ids?.order_id,
-                player: nickJugador,
-                productKey: inputItem
-            });
-        } catch (error) {
-            console.error('[PAYMENT STATE ERROR]', error.message);
-            return res.status(500).json({ error: 'No se pudo registrar el evento de pago' });
-        }
-        if (entrega.duplicate) return res.status(200).send('DUPLICATE');
-
-        const estadoEntrega = obtenerEntrega(entrega.eventKey);
-        try {
-            let siguienteComando = estadoEntrega.nextCommand;
-            const comandos = producto.comandos(nickJugador);
-            for (; siguienteComando < comandos.length; siguienteComando += 1) {
-                await ejecutarComandoMinecraft(comandos[siguienteComando]);
-                registrarComandoEntregado(entrega.eventKey, siguienteComando + 1);
+            const configuracion = leerConfiguracionTienda();
+            if (!await verificarFirmaWebhookPayPal(req, configuracion)) {
+                return res.status(400).json({ error: 'Firma de PayPal inválida' });
             }
-            completarEntrega(entrega.eventKey);
+            actualizarOrden(orderId, { status: 'approved' });
+            return res.status(200).send('OK');
         } catch (error) {
-            fallarEntrega(entrega.eventKey, error);
-            return res.status(503).json({ error: 'La entrega está pendiente de reintento' });
+            console.error('[PAYPAL WEBHOOK ERROR]', error.message);
+            return res.status(400).json({ error: 'No se pudo verificar el webhook de PayPal' });
         }
     }
 
-    res.status(200).send('OK');
+    if (evento.event_type !== 'PAYMENT.CAPTURE.COMPLETED') return res.status(200).send('IGNORED');
+
+    const captureId = detallesPago.id;
+    const orderId = detallesPago.supplementary_data?.related_ids?.order_id;
+    const eventId = evento.id || captureId;
+    const order = orderId ? obtenerOrden(orderId) : null;
+    if (!captureId || !orderId || !order) {
+        return res.status(400).json({ error: 'La captura de PayPal no está vinculada a una orden válida' });
+    }
+    if (!esNombreJugadorValido(order.player)) {
+        return res.status(400).json({ error: 'El nombre del jugador no es válido' });
+    }
+
+    let configuracion;
+    try {
+        configuracion = leerConfiguracionTienda();
+        if (!await verificarFirmaWebhookPayPal(req, configuracion)) {
+            return res.status(400).json({ error: 'Firma de PayPal inválida' });
+        }
+        await verificarCapturaPayPal(configuracion, captureId, orderId, {
+            total: order.total,
+            currency: order.currency
+        });
+    } catch (error) {
+        console.error('[PAYPAL VERIFICATION ERROR]', error.message);
+        return res.status(400).json({ error: 'El pago de PayPal no pudo verificarse' });
+    }
+
+    const comandos = [];
+    const productos = [];
+    for (const item of order.items || []) {
+        const sku = normalizarSku(item.name);
+        const producto = obtenerProducto(sku);
+        if (!producto || !Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 99) {
+            return res.status(400).json({ error: 'SKU o cantidad de producto no válidos' });
+        }
+        productos.push(sku);
+        for (let cantidad = 0; cantidad < item.quantity; cantidad += 1) {
+            comandos.push(...producto.comandos(order.player));
+        }
+    }
+    if (comandos.length === 0) return res.status(400).json({ error: 'La orden no contiene productos' });
+
+    let entrega;
+    try {
+        entrega = iniciarEntrega({
+            eventId,
+            captureId,
+            orderId,
+            player: order.player,
+            productKey: productos.join(',')
+        });
+    } catch (error) {
+        console.error('[PAYMENT STATE ERROR]', error.message);
+        return res.status(500).json({ error: 'No se pudo registrar el evento de pago' });
+    }
+    if (entrega.duplicate) return res.status(200).send('DUPLICATE');
+
+    const estadoEntrega = obtenerEntrega(entrega.eventKey);
+    try {
+        let siguienteComando = estadoEntrega.nextCommand;
+        for (; siguienteComando < comandos.length; siguienteComando += 1) {
+            await ejecutarComandoMinecraft(comandos[siguienteComando]);
+            registrarComandoEntregado(entrega.eventKey, siguienteComando + 1);
+        }
+        completarEntrega(entrega.eventKey);
+        actualizarOrden(orderId, { status: 'delivered', captureId });
+    } catch (error) {
+        fallarEntrega(entrega.eventKey, error);
+        actualizarOrden(orderId, { status: 'delivery_failed', captureId, deliveryError: error.message });
+        return res.status(503).json({ error: 'La entrega está pendiente de reintento' });
+    }
+
+    return res.status(200).send('OK');
 });
 
 if (require.main === module) {
