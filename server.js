@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const { leerConfiguracionTienda, calcularPrecioOrden } = require('./store-pricing');
+const { obtenerProducto, normalizarSku } = require('./delivery-catalog');
 const {
     iniciarEntrega,
     obtenerEntrega,
@@ -127,22 +128,6 @@ async function ejecutarComandoMinecraft(comando) {
     throw new Error(`No se pudo entregar el comando al panel: ${ultimoError.message}`);
 }
 
-// Diccionario unificado enfocado en las Protecciones VIP y Rangos por si acaso
-const productosTienda = {
-    // Rangos Supremos Permanentes
-    "apolo": { tipo: "rango", formato: "&#FFD700&lAPOLO", ejecutar: (nick) => `lp user ${nick} parent add apolo` },
-    "ares": { tipo: "rango", formato: "&#CD3434&lARES", ejecutar: (nick) => `lp user ${nick} parent add ares` },
-    "atenea": { tipo: "rango", formato: "&#A441D5&lATENEA", ejecutar: (nick) => `lp user ${nick} parent add atenea` },
-    "poseidon": { tipo: "rango", formato: "&#3A47B1&lPOSEIDON", ejecutar: (nick) => `lp user ${nick} parent add poseidon` },
-    "hades": { tipo: "rango", formato: "&#CD7232&lHADES", ejecutar: (nick) => `lp user ${nick} parent add hades` },
-    "zeus": { tipo: "rango", formato: "&#FFDA27&lZEUS", ejecutar: (nick) => `lp user ${nick} parent add zeus` },
-
-    // Protecciones VIP (Entrega de menas físicas mediante el plugin de protecciones)
-    "protección 125x125": { tipo: "proteccion", formato: "&#FFD700&lPROTECCIÓN ORO (125x125)", ejecutar: (nick) => `ps give ${nick} 125x125` },
-    "protección 150x150": { tipo: "proteccion", formato: "&#B794F4&lPROTECCIÓN CUARZO (150x150)", ejecutar: (nick) => `ps give ${nick} 150x150` },
-    "protección 200x200": { tipo: "proteccion", formato: "&#ED8936&lPROTECCIÓN ESCOMBRO (200x200)", ejecutar: (nick) => `ps give ${nick} 200x200` }
-};
-
 function esNombreJugadorValido(nombre) {
     return typeof nombre === 'string' && nombre.length >= 3 &&
         nombre.length <= 16 && /^[A-Za-z0-9_]+$/.test(nombre);
@@ -184,9 +169,11 @@ app.post('/webhook/paypal', async (req, res) => {
         if (!esNombreJugadorValido(nickJugador)) {
             return res.status(400).json({ error: 'El nombre del jugador no es válido' });
         }
-        let inputItem = (detallesPago.item_name || "protección 125x125").toLowerCase();
-
-        let producto = productosTienda[inputItem] || productosTienda["protección 125x125"];
+        const inputItem = normalizarSku(detallesPago.item_name);
+        const producto = obtenerProducto(inputItem);
+        if (!producto) {
+            return res.status(400).json({ error: 'SKU de producto no reconocido' });
+        }
 
         console.log(`✅ Procesando compra de protección para ${nickJugador} -> Producto: ${inputItem}`);
 
@@ -208,20 +195,11 @@ app.post('/webhook/paypal', async (req, res) => {
 
         const estadoEntrega = obtenerEntrega(entrega.eventKey);
         try {
-            // Ejecutar comando de entrega de la protección física
-            if (estadoEntrega.nextCommand < 1) {
-                await ejecutarComandoMinecraft(producto.ejecutar(nickJugador));
-                registrarComandoEntregado(entrega.eventKey, 1);
-            }
-
-            // Enviar anuncio broadcast en el servidor específico para la protección adquirida
-            if (estadoEntrega.nextCommand < 2) {
-                if (producto.tipo === "rango") {
-                    await ejecutarComandoMinecraft(`broadcast &e¡El jugador &6${nickJugador} &eha adquirido el rango permanente ${producto.formato} &een la tienda!`);
-                } else {
-                    await ejecutarComandoMinecraft(`broadcast &e¡El jugador &6${nickJugador} &eha adquirido la ${producto.formato} &een la tienda!`);
-                }
-                registrarComandoEntregado(entrega.eventKey, 2);
+            let siguienteComando = estadoEntrega.nextCommand;
+            const comandos = producto.comandos(nickJugador);
+            for (; siguienteComando < comandos.length; siguienteComando += 1) {
+                await ejecutarComandoMinecraft(comandos[siguienteComando]);
+                registrarComandoEntregado(entrega.eventKey, siguienteComando + 1);
             }
             completarEntrega(entrega.eventKey);
         } catch (error) {
