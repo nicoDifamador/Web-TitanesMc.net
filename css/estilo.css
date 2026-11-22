@@ -914,3 +914,129 @@ body {
 .key-card:hover .key-img-container img {
     transform: scale(1.06);
 }
+
+/* ================= DISEÑO RESPONSIVE ================= */
+@media (max-width: 900px) {
+    .header-container {
+        padding: 18px 20px;
+        gap: 16px;
+    }
+
+    .main-layout {
+        flex-direction: column !important;
+        width: 100%;
+        margin: 18px auto;
+        padding: 0 14px;
+        gap: 18px;
+    }
+
+    .categories-nav {
+        width: 100% !important;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 12px;
+    }
+
+    .categories-nav > :not(.cat-btn) {
+        grid-column: 1 / -1;
+    }
+
+    .content-area {
+        width: 100%;
+    }
+
+    .items-grid,
+    .items-grid-keys {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .rank-modal-content {
+        max-width: calc(100vw - 28px);
+    }
+}
+
+@media (max-width: 560px) {
+    .header-container {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 16px 14px;
+    }
+
+    .logo-area {
+        justify-content: center;
+    }
+
+    .auth-buttons {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .btn-login,
+    .btn-basket {
+        flex: 1;
+        min-width: 0;
+        padding-inline: 8px;
+    }
+
+    .categories-nav {
+        grid-template-columns: 1fr;
+    }
+
+    .categories-nav > :not(.cat-btn) {
+        grid-column: auto;
+    }
+
+    .items-grid,
+    .items-grid-keys {
+        grid-template-columns: 1fr !important;
+    }
+
+    .item-card,
+    .key-card {
+        min-width: 0;
+        padding: 18px;
+    }
+
+    .section-header h2 {
+        font-size: 20px;
+    }
+
+    .modal-content,
+    .rank-modal-content {
+        width: calc(100vw - 24px);
+        max-width: none;
+        padding: 20px;
+    }
+
+    .cart-item-row {
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .cart-item-info {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+}
+
+@media (max-width: 360px) {
+    .main-layout {
+        padding-inline: 10px;
+    }
+
+    .logo-area img {
+        height: 48px;
+    }
+
+    .server-title h1 {
+        font-size: 17px;
+    }
+
+    .server-title span {
+        font-size: 9px;
+    }
+
+    .cat-btn {
+        padding-inline: 12px;
+    }
+}
