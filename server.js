@@ -28,6 +28,32 @@ app.disable('x-powered-by');
 // Nginx runs next to the process, so only loopback proxy headers are trusted by
 // default. This keeps X-Forwarded-* useful without trusting arbitrary clients.
 app.set('trust proxy', process.env.TRUST_PROXY || 'loopback');
+
+// Defensive response headers apply to the storefront and API alike. The CSP
+// deliberately keeps JavaScript external while allowing the PayPal SDK and
+// the skin/avatar image providers used by the public catalog.
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+    res.setHeader('Content-Security-Policy', [
+        "default-src 'self'",
+        "base-uri 'self'",
+        "object-src 'none'",
+        "frame-ancestors 'self'",
+        "script-src 'self' https://www.paypal.com https://www.paypalobjects.com",
+        "style-src 'self' 'unsafe-inline'",
+        "img-src 'self' https://mc-heads.net https://crafthead.net data:",
+        "font-src 'self' data:",
+        "connect-src 'self' https://api-m.paypal.com https://api-m.sandbox.paypal.com https://www.paypal.com",
+        "frame-src https://www.paypal.com https://www.sandbox.paypal.com",
+        "form-action 'self' https://www.paypal.com https://www.sandbox.paypal.com"
+    ].join('; '));
+    if (req.secure) {
+        res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+    }
+    next();
+});
 app.use(express.json({ limit: '32kb' }));
 
 function leerPuerto() {
