@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.2 - 2026-11-24
+
+### Seguridad, accesibilidad y auditoría de la tienda
+
+- Añadidos headers defensivos y CSP sin JavaScript inline.
+- Eliminados handlers inline y reforzado el estado persistido del carrito.
+- Añadidos modales accesibles con foco, Escape y navegación por teclado.
+- Añadidos metadatos canónicos/Open Graph y smoke tests de producción.
+- Cerrados los issues #16, #17, #18, #19 y #20 tras validación automatizada.
+
 ## 0.2.1 - 2026-11-24
 
 ### Compatibilidad Docker y Pterodactyl
