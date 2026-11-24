@@ -108,9 +108,9 @@
     </div>
 
     <!-- MODAL BAÚL DE MONEDAS -->
-    <div class="rank-modal-overlay" id="modal-item-baul" style="display: none;">
+    <div class="rank-modal-overlay" id="modal-item-baul" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Opciones de Baúl de Monedas" hidden style="display: none;">
         <div class="rank-modal-content">
-            <span data-action="close-modal" data-modal-id="modal-item-baul" style="position: absolute; top: 15px; right: 20px; font-size: 24px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1;">&times;</span>
+            <button type="button" class="close-modal" data-action="close-modal" data-modal-id="modal-item-baul" aria-label="Cerrar opciones de Baúl de Monedas">&times;</button>
             <h2 style="color: #f6e05e; margin: 0 0 5px 0; font-size: 20px; padding-right: 30px;">BAÚL DE MONEDAS</h2>
             <p style="color: #cbd5e1; font-size: 12px; line-height: 1.5; margin-bottom: 12px;">💰 <strong>¡Los tesoros del dios de la riqueza a tu disposición y descubre nuevos horizontes!</strong> Abastece tus arcas al instante.</p>
             <div style="background: #141824; padding: 10px 12px; border-radius: 6px; margin-bottom: 15px; border-left: 3px solid #f6e05e;">
@@ -128,9 +128,9 @@
     </div>
 
     <!-- MODAL KIT DE SUPERVIVENCIA -->
-    <div class="rank-modal-overlay" id="modal-item-kit" style="display: none;">
+    <div class="rank-modal-overlay" id="modal-item-kit" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Opciones de Kit de Supervivencia" hidden style="display: none;">
         <div class="rank-modal-content">
-            <span data-action="close-modal" data-modal-id="modal-item-kit" style="position: absolute; top: 15px; right: 20px; font-size: 24px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1;">&times;</span>
+            <button type="button" class="close-modal" data-action="close-modal" data-modal-id="modal-item-kit" aria-label="Cerrar opciones de Kit de Supervivencia">&times;</button>
             <h2 style="color: #f6e05e; margin: 0 0 5px 0; font-size: 20px; padding-right: 30px;">KIT DE SUPERVIVENCIA</h2>
             <p style="color: #cbd5e1; font-size: 12px; line-height: 1.5; margin-bottom: 12px;">🛡️ <strong>¡Equipamiento legendario para conquistar nuevos horizontes!</strong> Prepárate para cualquier batalla en el panteón.</p>
             <div style="background: #141824; padding: 10px 12px; border-radius: 6px; margin-bottom: 15px; border-left: 3px solid #f6e05e;">
@@ -148,9 +148,9 @@
     </div>
 
     <!-- Modales de Sesión y Carrito Corregidos -->
-    <div class="modal-overlay" id="login-modal" style="display: none;">
+    <div class="modal-overlay" id="login-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Inicio de sesión" hidden style="display: none;">
         <div class="modal-content">
-            <span class="close-modal" id="close-login">&times;</span>
+            <button type="button" class="close-modal" id="close-login" data-action="close-modal" data-modal-id="login-modal" aria-label="Cerrar inicio de sesión">&times;</button>
             <h3>Identifícate</h3>
             <form data-action="save-session">
                 <label for="input-nick">Nickname:</label>
@@ -160,9 +160,9 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="basket-modal" style="display: none;">
+    <div class="modal-overlay" id="basket-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Carrito de compras" hidden style="display: none;">
         <div class="modal-content" style="max-width: 420px;">
-            <span class="close-modal" id="close-basket">&times;</span>
+            <button type="button" class="close-modal" id="close-basket" data-action="close-modal" data-modal-id="basket-modal" aria-label="Cerrar carrito">&times;</button>
             <h3 style="color: #f6e05e; margin-bottom: 5px;">Tu Carrito de Compras</h3>
             <p style="color: #94a3b8; font-size: 12px; margin-bottom: 15px;">Artículos seleccionados para tu cuenta</p>
             
@@ -193,7 +193,7 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="checkout-modal" style="display: none;">
+    <div class="modal-overlay" id="checkout-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Pasarela de pago" hidden style="display: none;">
         <div class="modal-content" style="background: #12141c; border: 1px solid #d69e2e; max-width: 400px;">
             <h3 style="margin-top: 0; color: #f6e05e; border-bottom: 1px solid #2d3748; padding-bottom: 10px;">Pasarela de Pago</h3>
             <p style="font-size: 14px; color: #a0aec0; margin: 10px 0;">Jugador destino: <strong id="checkout-user" style="color: #10b981;"></strong></p>

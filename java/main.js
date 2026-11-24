@@ -38,6 +38,31 @@ let carrito = normalizarCarrito(leerAlmacenamiento("titanes_cart", []));
 let descuentoAplicado = 0; // Porcentaje de descuento global (ej. 0.10 para 10%)
 let cuponAplicado = "";
 let configuracionTienda;
+let modalAnterior = null;
+
+function elementosEnfocables(contenedor) {
+    return [...contenedor.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+        .filter(elemento => !elemento.hidden && elemento.offsetParent !== null);
+}
+
+function abrirModal(modal, activador = document.activeElement) {
+    if (!modal) return;
+    modalAnterior = activador instanceof HTMLElement ? activador : null;
+    modal.hidden = false;
+    modal.setAttribute('aria-hidden', 'false');
+    modal.style.display = 'flex';
+    const primerElemento = elementosEnfocables(modal)[0];
+    (primerElemento || modal).focus();
+}
+
+function cerrarModal(modal) {
+    if (!modal) return;
+    modal.hidden = true;
+    modal.setAttribute('aria-hidden', 'true');
+    modal.style.display = 'none';
+    if (modalAnterior?.isConnected) modalAnterior.focus();
+    modalAnterior = null;
+}
 
 const configuracionTiendaPromise = fetch("config.json")
     .then(respuesta => {
@@ -464,15 +489,15 @@ async function procederCheckout() {
     document.getElementById("checkout-user").textContent = usuarioGuardado;
     document.getElementById("checkout-total-text").textContent = `Total a Pagar: ${formatearPrecio(totalFinal, configuracion)}`;
 
-    document.getElementById("basket-modal").style.display = "none";
-    document.getElementById("checkout-modal").style.display = "flex";
+    cerrarModal(document.getElementById("basket-modal"));
+    abrirModal(document.getElementById("checkout-modal"));
 
     // Cargar botones oficiales de PayPal dinámicamente
     renderizarPayPal(usuarioGuardado, configuracion);
 }
 
 function cerrarCheckout() {
-    document.getElementById("checkout-modal").style.display = "none";
+    cerrarModal(document.getElementById("checkout-modal"));
 }
 
 function renderizarPayPal(usuario, configuracion) {
@@ -507,7 +532,7 @@ function renderizarPayPal(usuario, configuracion) {
                     descuentoAplicado = 0;
                     cuponAplicado = "";
                     guardarCarrito();
-                    document.getElementById("checkout-modal").style.display = "none";
+                    cerrarModal(document.getElementById("checkout-modal"));
                 });
             },
             onError: function(err) {
@@ -535,8 +560,7 @@ function manejarSesion() {
             alert("Has cerrado sesión.");
         }
     } else {
-        const modal = document.getElementById("login-modal");
-        if (modal) modal.style.display = "flex";
+        abrirModal(document.getElementById("login-modal"));
     }
 }
 
@@ -558,8 +582,7 @@ function guardarSesion(event) {
     } catch (error) {
         console.warn("No se pudo guardar el nickname en este navegador", error);
     }
-    const modal = document.getElementById("login-modal");
-    if (modal) modal.style.display = "none";
+    cerrarModal(document.getElementById("login-modal"));
     actualizarBotonSesion();
     alert(`¡Bienvenido, ${nick}! Sesión guardada con éxito.`);
 }
@@ -593,16 +616,12 @@ function actualizarBotonSesion() {
 // =================================================================
 function abrirModalRango(modalId) {
     const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.style.display = 'flex';
-    }
+    abrirModal(modal);
 }
 
 function cerrarModalRango(modalId) {
     const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.style.display = 'none';
-    }
+    cerrarModal(modal);
 }
 
 function manejarAccionInterfaz(event) {
@@ -628,7 +647,8 @@ function manejarAccionInterfaz(event) {
         if (nombre) agregarAlCarrito(nombre);
         if (control.dataset.closeModal) cerrarModalRango(control.dataset.closeModal);
     } else if (accion === "open-modal") {
-        abrirModalRango(control.dataset.modalId);
+        const modal = document.getElementById(control.dataset.modalId);
+        abrirModal(modal, control);
     } else if (accion === "close-modal") {
         cerrarModalRango(control.dataset.modalId);
     } else if (accion === "apply-coupon") {
@@ -643,6 +663,31 @@ function manejarAccionInterfaz(event) {
 }
 
 document.addEventListener("click", manejarAccionInterfaz);
+document.addEventListener("keydown", (event) => {
+    const modal = event.target.closest?.('.modal-overlay:not([hidden]), .rank-modal-overlay:not([hidden])');
+    if (!modal) return;
+    if (event.key === 'Escape') {
+        event.preventDefault();
+        cerrarModal(modal);
+        return;
+    }
+    if (event.key !== 'Tab') return;
+    const enfocables = elementosEnfocables(modal);
+    if (!enfocables.length) {
+        event.preventDefault();
+        modal.focus();
+        return;
+    }
+    const primero = enfocables[0];
+    const ultimo = enfocables[enfocables.length - 1];
+    if (event.shiftKey && document.activeElement === primero) {
+        event.preventDefault();
+        ultimo.focus();
+    } else if (!event.shiftKey && document.activeElement === ultimo) {
+        event.preventDefault();
+        primero.focus();
+    }
+});
 document.addEventListener("submit", (event) => {
     if (event.target.matches("[data-action=save-session]")) guardarSesion(event);
 });
@@ -667,6 +712,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Forzar que TODOS los modales (rangos, llaves, login, carrito, checkout) comiencen ocultos
     const modalesOverlay = document.querySelectorAll('.modal-overlay, .rank-modal-overlay');
     modalesOverlay.forEach(m => {
+        m.hidden = true;
+        m.setAttribute('aria-hidden', 'true');
+        m.tabIndex = -1;
         m.style.display = 'none';
     });
 
@@ -680,32 +728,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (btnBasket && basketModal) {
         btnBasket.addEventListener("click", () => {
             renderizarCarrito();
-            basketModal.style.display = "flex";
+            abrirModal(basketModal, btnBasket);
         });
     }
 
     if (closeBasket && basketModal) {
-        closeBasket.addEventListener("click", () => {
-            basketModal.style.display = "none";
-        });
+        closeBasket.addEventListener("click", () => cerrarModal(basketModal));
     }
 
     if (closeLogin && loginModal) {
-        closeLogin.addEventListener("click", () => {
-            loginModal.style.display = "none";
-        });
+        closeLogin.addEventListener("click", () => cerrarModal(loginModal));
     }
 
     // Cerrar modales al hacer clic fuera del contenido principal
     window.addEventListener("click", (e) => {
-        if (basketModal && e.target === basketModal) basketModal.style.display = "none";
-        if (loginModal && e.target === loginModal) loginModal.style.display = "none";
-        if (checkoutModal && e.target === checkoutModal) checkoutModal.style.display = "none";
+        if (basketModal && e.target === basketModal) cerrarModal(basketModal);
+        if (loginModal && e.target === loginModal) cerrarModal(loginModal);
+        if (checkoutModal && e.target === checkoutModal) cerrarModal(checkoutModal);
         
         // También cerrar modales de rangos/llaves al hacer clic en el overlay
         modalesOverlay.forEach(modal => {
             if (e.target === modal) {
-                modal.style.display = 'none';
+                cerrarModal(modal);
             }
         });
     });
