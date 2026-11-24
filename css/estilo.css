@@ -13,6 +13,105 @@
     --site-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Component styles used by the secure DOM renderer in java/main.js. */
+.toast-notification {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    z-index: 10000;
+    transform: translateX(-50%) translateY(100px);
+    padding: 12px 24px;
+    border: 1px solid #d69e2e;
+    border-radius: 8px;
+    background: #181f33;
+    color: #f6e05e;
+    font-weight: bold;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.toast-notification.is-visible {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.cart-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: #1a202c;
+}
+
+.cart-item-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.cart-item-name {
+    color: #fff;
+    font-size: 13px;
+    font-weight: bold;
+    overflow-wrap: anywhere;
+}
+
+.cart-item-price {
+    color: #a0aec0;
+    font-size: 11px;
+}
+
+.btn-remove {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-remove:focus-visible,
+.submit-btn:focus-visible,
+.btn-login:focus-visible,
+.btn-basket:focus-visible {
+    outline: 3px solid var(--site-primary);
+    outline-offset: 3px;
+}
+
+.cart-empty,
+.paypal-error {
+    margin: 20px 0;
+    color: var(--site-muted);
+    font-size: 13px;
+    text-align: center;
+}
+
+.paypal-error {
+    color: #e53e3e;
+}
+
+.session-avatar {
+    width: 20px;
+    height: 20px;
+    margin-right: 6px;
+    border-radius: 3px;
+    vertical-align: middle;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
 * {
     box-sizing: border-box;
     margin: 0;

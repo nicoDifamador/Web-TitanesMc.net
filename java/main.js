@@ -1,7 +1,40 @@
 // =================================================================
 // CARRITO DE COMPRAS FUNCIONAL Y ANIMADO
 // =================================================================
-let carrito = JSON.parse(localStorage.getItem("titanes_cart")) || [];
+const NOMBRE_JUGADOR = /^[A-Za-z0-9_]{3,16}$/;
+
+function leerAlmacenamiento(clave, valorPredeterminado) {
+    try {
+        const valor = localStorage.getItem(clave);
+        return valor === null ? valorPredeterminado : JSON.parse(valor);
+    } catch (error) {
+        console.warn(`Se descartó el valor inválido de ${clave}`, error);
+        try {
+            localStorage.removeItem(clave);
+        } catch (_storageError) {
+            // Some privacy modes disable storage entirely; continue in memory.
+        }
+        return valorPredeterminado;
+    }
+}
+
+function normalizarCarrito(valor) {
+    if (!Array.isArray(valor)) return [];
+    return valor
+        .filter(item => item && typeof item.name === "string" && item.name.length <= 120)
+        .map(item => ({
+            name: item.name,
+            cantidad: Number.isInteger(item.cantidad) ? item.cantidad : 1
+        }))
+        .filter(item => item.cantidad >= 1 && item.cantidad <= 99);
+}
+
+function leerUsuarioGuardado() {
+    const usuario = leerAlmacenamiento("titanes_user", "");
+    return typeof usuario === "string" && NOMBRE_JUGADOR.test(usuario) ? usuario : "";
+}
+
+let carrito = normalizarCarrito(leerAlmacenamiento("titanes_cart", []));
 let descuentoAplicado = 0; // Porcentaje de descuento global (ej. 0.10 para 10%)
 let cuponAplicado = "";
 let configuracionTienda;
@@ -117,7 +150,7 @@ function aplicarDisenoConfigurado(configuracion) {
         root.style.setProperty(propiedad, color);
     }
     root.style.setProperty("--site-font-family", configuracion.design.fontFamily);
-    document.querySelectorAll(".submit-btn, button[onclick*=\"agregarAlCarrito\"]").forEach(boton => {
+    document.querySelectorAll(".submit-btn").forEach(boton => {
         boton.style.backgroundColor = configuracion.design.colors.primary;
         boton.style.color = configuracion.design.colors.background;
     });
@@ -189,14 +222,12 @@ function sincronizarPreciosCarrito(configuracion) {
     guardarCarrito();
 }
 
-// Limpieza preventiva si hubiera datos viejos con 'undefined' o NaN
-if (carrito.some(item => !item.name || isNaN(item.price))) {
-    carrito = [];
-    localStorage.removeItem("titanes_cart");
-}
-
 function guardarCarrito() {
-    localStorage.setItem("titanes_cart", JSON.stringify(carrito));
+    try {
+        localStorage.setItem("titanes_cart", JSON.stringify(carrito));
+    } catch (error) {
+        console.warn("No se pudo persistir el carrito en este navegador", error);
+    }
     actualizarContadorCarrito();
 }
 
@@ -204,7 +235,7 @@ function actualizarContadorCarrito() {
     const btnBasket = document.getElementById("btn-basket");
     if (btnBasket) {
         const totalItems = carrito.reduce((acc, item) => acc + item.cantidad, 0);
-        btnBasket.innerHTML = `🛒 Carrito (${totalItems})`;
+        btnBasket.textContent = `🛒 Carrito (${totalItems})`;
     }
 }
 
@@ -213,14 +244,13 @@ function mostrarToast(mensaje) {
     if (!toast) {
         toast = document.createElement("div");
         toast.id = "toast-notification";
-        // Estilos rápidos para el toast si no están en el CSS
-        toast.style.cssText = "position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: #181f33; color: #f6e05e; border: 1px solid #d69e2e; padding: 12px 24px; border-radius: 8px; font-weight: bold; z-index: 10000; transition: transform 0.3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.5);";
+        toast.className = "toast-notification";
         document.body.appendChild(toast);
     }
     toast.textContent = mensaje;
-    toast.style.transform = "translateX(-50%) translateY(0)";
+    toast.classList.add("is-visible");
     setTimeout(() => {
-        toast.style.transform = "translateX(-50%) translateY(100px)";
+        toast.classList.remove("is-visible");
     }, 2500);
 }
 
@@ -296,50 +326,78 @@ function renderizarCarrito() {
 
     if (!container) return;
 
+    const precio = (valor) => configuracionTienda
+        ? formatearPrecio(valor, configuracionTienda)
+        : `$${valor.toFixed(2)}`;
+
+    const actualizarLineaResumen = (elemento, etiqueta, valor) => {
+        if (!elemento) return;
+        const etiquetaElement = document.createElement("span");
+        etiquetaElement.textContent = etiqueta;
+        const valorElement = document.createElement("span");
+        valorElement.textContent = valor;
+        elemento.replaceChildren(etiquetaElement, valorElement);
+    };
+
     if (carrito.length === 0) {
-        const precioCero = configuracionTienda ? formatearPrecio(0, configuracionTienda) : "$0.00";
-        container.innerHTML = `<p style="color: #94a3b8; font-size: 13px; margin: 20px 0; text-align: center;">Tu carrito está vacío.</p>`;
-        if (subtotalText) subtotalText.innerHTML = `<span>Subtotal:</span> <span>${precioCero}</span>`;
-        if (discountText) discountText.style.display = "none";
+        const precioCero = precio(0);
+        const empty = document.createElement("p");
+        empty.className = "cart-empty";
+        empty.textContent = "Tu carrito está vacío.";
+        container.replaceChildren(empty);
+        actualizarLineaResumen(subtotalText, "Subtotal:", precioCero);
+        if (discountText) discountText.hidden = true;
         if (totalContainer) totalContainer.textContent = precioCero;
         return;
     }
 
-    let html = '';
+    container.replaceChildren();
     let subtotal = 0;
 
     carrito.forEach(item => {
-        let itemTotal = item.price * item.cantidad;
+        const itemTotal = Number(item.price) * item.cantidad;
         subtotal += itemTotal;
-        let nombreEscapado = item.name.replace(/'/g, "\\'");
-        html += `
-            <div class="cart-item-row" style="display: flex; justify-content: space-between; align-items: center; background: #1a202c; padding: 8px 12px; border-radius: 6px; margin-bottom: 8px;">
-                <div class="cart-item-info" style="display: flex; flex-direction: column;">
-                    <span style="color: #fff; font-size: 13px; font-weight: bold;">${item.name} (x${item.cantidad})</span>
-                    <small style="color: #a0aec0; font-size: 11px;">${configuracionTienda ? formatearPrecio(itemTotal, configuracionTienda) : `$${itemTotal.toFixed(2)}`}</small>
-                </div>
-                <div class="cart-item-actions">
-                    <button class="btn-remove" onclick="eliminarDelCarrito('${nombreEscapado}')" style="background: transparent; border: none; cursor: pointer; font-size: 14px;" title="Eliminar">🗑️</button>
-                </div>
-            </div>
-        `;
-    });
+        const row = document.createElement("div");
+        row.className = "cart-item-row";
 
-    container.innerHTML = html;
+        const info = document.createElement("div");
+        info.className = "cart-item-info";
+        const name = document.createElement("span");
+        name.className = "cart-item-name";
+        name.textContent = `${item.name} (x${item.cantidad})`;
+        const amount = document.createElement("small");
+        amount.className = "cart-item-price";
+        amount.textContent = precio(itemTotal);
+        info.append(name, amount);
+
+        const actions = document.createElement("div");
+        actions.className = "cart-item-actions";
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "btn-remove";
+        remove.dataset.action = "remove-cart-item";
+        remove.dataset.productName = item.name;
+        remove.setAttribute("aria-label", `Eliminar ${item.name} del carrito`);
+        remove.title = "Eliminar producto";
+        remove.textContent = "🗑️";
+        actions.append(remove);
+        row.append(info, actions);
+        container.append(row);
+    });
 
     let descuentoValor = subtotal * descuentoAplicado;
     let totalFinal = subtotal - descuentoValor;
 
-    if (subtotalText) subtotalText.innerHTML = `<span>Subtotal:</span> <span>${configuracionTienda ? formatearPrecio(subtotal, configuracionTienda) : `$${subtotal.toFixed(2)}`}</span>`;
+    actualizarLineaResumen(subtotalText, "Subtotal:", precio(subtotal));
     
     if (descuentoAplicado > 0) {
-        if (discountText) discountText.style.display = "flex";
-        if (discountAmountSpan) discountAmountSpan.textContent = `-${configuracionTienda ? formatearPrecio(descuentoValor, configuracionTienda) : `$${descuentoValor.toFixed(2)}`}`;
+        if (discountText) discountText.hidden = false;
+        if (discountAmountSpan) discountAmountSpan.textContent = `-${precio(descuentoValor)}`;
     } else {
-        if (discountText) discountText.style.display = "none";
+        if (discountText) discountText.hidden = true;
     }
 
-    if (totalContainer) totalContainer.textContent = configuracionTienda ? formatearPrecio(totalFinal, configuracionTienda) : `$${totalFinal.toFixed(2)}`;
+    if (totalContainer) totalContainer.textContent = precio(totalFinal);
 }
 
 // Sistema de cupones
@@ -379,7 +437,7 @@ async function procederCheckout() {
         return;
     }
 
-    const usuarioGuardado = localStorage.getItem("titanes_user");
+    const usuarioGuardado = leerUsuarioGuardado();
     if (!usuarioGuardado) {
         alert("Debes iniciar sesión con tu nick de Minecraft antes de comprar.");
         manejarSesion();
@@ -419,7 +477,7 @@ function cerrarCheckout() {
 
 function renderizarPayPal(usuario, configuracion) {
     const container = document.getElementById("paypal-button-container");
-    container.innerHTML = ""; // Limpiar botones anteriores si los hubiera
+    container.replaceChildren(); // Limpiar botones anteriores si los hubiera
 
     if (typeof paypal !== "undefined") {
         paypal.Buttons({
@@ -458,7 +516,10 @@ function renderizarPayPal(usuario, configuracion) {
             }
         }).render("#paypal-button-container");
     } else {
-        container.innerHTML = `<p style="color: #e53e3e; font-size: 12px; text-align: center;">El SDK de PayPal no se pudo cargar. Revisa tu conexión.</p>`;
+        const errorMessage = document.createElement("p");
+        errorMessage.className = "paypal-error";
+        errorMessage.textContent = "El SDK de PayPal no se pudo cargar. Revisa tu conexión.";
+        container.replaceChildren(errorMessage);
     }
 }
 
@@ -466,7 +527,7 @@ function renderizarPayPal(usuario, configuracion) {
 // GESTIÓN DE SESIÓN Y EVENTOS DE INTERFAZ
 // =================================================================
 function manejarSesion() {
-    const usuarioGuardado = localStorage.getItem("titanes_user");
+    const usuarioGuardado = leerUsuarioGuardado();
     if (usuarioGuardado) {
         if (confirm(`Sesión iniciada como: ${usuarioGuardado}\n¿Deseas cerrar sesión?`)) {
             localStorage.removeItem("titanes_user");
@@ -485,29 +546,39 @@ function guardarSesion(event) {
     if (!inputNick) return;
     
     const nick = inputNick.value.trim();
-    if (nick) {
-        localStorage.setItem("titanes_user", nick);
-        const modal = document.getElementById("login-modal");
-        if (modal) modal.style.display = "none";
-        actualizarBotonSesion();
-        alert(`¡Bienvenido, ${nick}! Sesión guardada con éxito.`);
+    if (!NOMBRE_JUGADOR.test(nick)) {
+        inputNick.setCustomValidity("Usa entre 3 y 16 caracteres: letras, números o guion bajo.");
+        inputNick.reportValidity();
+        return;
     }
+
+    inputNick.setCustomValidity("");
+    try {
+        localStorage.setItem("titanes_user", nick);
+    } catch (error) {
+        console.warn("No se pudo guardar el nickname en este navegador", error);
+    }
+    const modal = document.getElementById("login-modal");
+    if (modal) modal.style.display = "none";
+    actualizarBotonSesion();
+    alert(`¡Bienvenido, ${nick}! Sesión guardada con éxito.`);
 }
 
 function actualizarBotonSesion() {
     const btnLogin = document.getElementById("btn-login-user");
     if (!btnLogin) return;
     
-    const usuarioGuardado = localStorage.getItem("titanes_user");
+    const usuarioGuardado = leerUsuarioGuardado();
     
     if (usuarioGuardado) {
-        btnLogin.innerHTML = `
-            <img src="https://crafthead.net/avatar/${usuarioGuardado}/24" 
-                 alt="Skin" 
-                 style="width: 20px; height: 20px; vertical-align: middle; border-radius: 3px; margin-right: 6px;"
-                 onerror="this.src='https://crafthead.net/avatar/MHF_Steve/24'">
-            ${usuarioGuardado}
-        `;
+        btnLogin.replaceChildren();
+        const avatar = document.createElement("img");
+        avatar.className = "session-avatar";
+        avatar.src = `https://crafthead.net/avatar/${encodeURIComponent(usuarioGuardado)}/24`;
+        avatar.alt = "";
+        avatar.referrerPolicy = "no-referrer";
+        avatar.addEventListener("error", () => avatar.remove(), { once: true });
+        btnLogin.append(avatar, document.createTextNode(usuarioGuardado));
         btnLogin.style.borderColor = "#10b981";
         btnLogin.style.color = "#10b981";
     } else {
