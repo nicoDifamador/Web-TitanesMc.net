@@ -36,3 +36,44 @@ Desde la raíz del repositorio, con Node.js 22 o posterior:
 1. Ejecuta `npm ci` para instalar las versiones registradas en `package-lock.json`.
 2. Copia `.env.example` a `.env` y completa las variables de PayPal. Configura también `paypal.clientId` en `config.json` para el mismo entorno. Las credenciales del panel sólo son obligatorias si activas la entrega automática.
 3. Ejecuta `npm test` para verificar el backend y `npm start` para arrancarlo.
+
+## Pterodactyl y Docker
+
+La aplicación es CommonJS y no necesita una etapa de compilación. El archivo de
+entrada siempre está en la raíz del despliegue: `server.js`.
+
+En Pterodactyl configura:
+
+```env
+MAIN_FILE=server.js
+NODE_ENV=production
+HOST=0.0.0.0
+AUTO_DELIVERY_ENABLED=false
+```
+
+El Egg debe ejecutar desde `/home/container` su comando habitual:
+`node "${MAIN_FILE}"`. Pterodactyl debe inyectar el puerto asignado en
+`SERVER_PORT` (si no lo hace, también se acepta `PORT`). No fijes el puerto en
+el código ni muevas el contenido de la release a una carpeta anidada: `server.js`,
+`package.json` y `config.json` deben quedar directamente en `/home/container`.
+
+Para una ejecución local equivalente:
+
+```bash
+HOST=0.0.0.0 SERVER_PORT=3000 NODE_ENV=production npm start
+```
+
+También se incluye un `Dockerfile` basado en `node:25-bookworm-slim`:
+
+```bash
+docker build -t titanesmc:local .
+docker run --env-file .env -p 3000:3000 titanesmc:local
+```
+
+El proceso expone `GET /healthz`, sirve el frontend estático y responde en
+`0.0.0.0`. Nginx y Cloudflare siguen gestionando HTTPS fuera del contenedor;
+el backend confía por defecto únicamente en el proxy de loopback (`TRUST_PROXY`)
+y acepta ambos orígenes públicos mediante `SITE_ORIGIN`/`SITE_ORIGINS`.
+
+Al recibir `SIGTERM` o `SIGINT`, deja de aceptar conexiones y cierra el servidor
+de forma ordenada. No requiere permisos root.

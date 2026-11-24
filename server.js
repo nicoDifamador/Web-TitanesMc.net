@@ -19,10 +19,63 @@ const {
     fallarEntrega
 } = require('./payment-store');
 
-const app = express();
-app.use(express.json());
+const ROOT_DIR = __dirname;
+const DEFAULT_HOST = '0.0.0.0';
+const DEFAULT_PORT = 3000;
 
-const publicRoot = __dirname;
+const app = express();
+app.disable('x-powered-by');
+// Nginx runs next to the process, so only loopback proxy headers are trusted by
+// default. This keeps X-Forwarded-* useful without trusting arbitrary clients.
+app.set('trust proxy', process.env.TRUST_PROXY || 'loopback');
+app.use(express.json({ limit: '32kb' }));
+
+function leerPuerto() {
+    const valor = process.env.SERVER_PORT || process.env.PORT || String(DEFAULT_PORT);
+    const puerto = Number.parseInt(valor, 10);
+    if (!Number.isInteger(puerto) || puerto < 0 || puerto > 65535) {
+        throw new Error(`Puerto inválido: ${valor}`);
+    }
+    return puerto;
+}
+
+function obtenerOrigenesPermitidos() {
+    return [process.env.SITE_ORIGIN, process.env.SITE_ORIGINS]
+        .filter(Boolean)
+        .flatMap((valor) => valor.split(','))
+        .map((valor) => valor.trim().replace(/\/$/, ''))
+        .filter(Boolean);
+}
+
+app.get('/healthz', (_req, res) => {
+    res.status(200).json({ status: 'ok' });
+});
+
+const rutasPrivadas = new Set([
+    '/server.js',
+    '/package.json',
+    '/package-lock.json',
+    '/payment-store.js',
+    '/paypal.js',
+    '/store-pricing.js',
+    '/delivery-catalog.js',
+    '/README.md',
+    '/CONFIGURACION.md',
+    '/SEGURIDAD.md',
+    '/CHANGELOG.md',
+    '/.env',
+    '/.env.example',
+    '/.gitignore',
+    '/Dockerfile'
+]);
+app.use((req, res, next) => {
+    if (rutasPrivadas.has(req.path) || req.path === '/test' || req.path.startsWith('/test/')) {
+        return res.sendStatus(404);
+    }
+    next();
+});
+
+const publicRoot = ROOT_DIR;
 const publicPages = [
     'tienda.html',
     'protecciones.html',
@@ -101,7 +154,8 @@ function registrarCorsTienda(req, res, next) {
     if (!origin) return next();
 
     const origenServidor = `${req.protocol}://${req.get('host')}`;
-    if (origin !== origenServidor && origin !== process.env.SITE_ORIGIN) {
+    const origenesPermitidos = obtenerOrigenesPermitidos();
+    if (origin !== origenServidor && !origenesPermitidos.includes(origin)) {
         return res.status(403).json({ error: 'Origen no autorizado' });
     }
     if (origin !== origenServidor) {
@@ -342,12 +396,56 @@ app.post('/webhook/paypal', async (req, res) => {
     return res.status(200).send('OK');
 });
 
-if (require.main === module) {
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, '0.0.0.0', () => {
-        console.log(`🚀 Servidor backend corriendo en puerto ${PORT}`);
+function iniciarServidor() {
+    const host = process.env.HOST || DEFAULT_HOST;
+    const port = leerPuerto();
+    const server = app.listen(port, host, () => {
+        const direccion = server.address();
+        const puertoReal = typeof direccion === 'object' && direccion ? direccion.port : port;
+        console.log(`🚀 Servidor TITANES MC escuchando en ${host}:${puertoReal}`);
         console.log(`[DELIVERY] Entrega automática ${autoDeliveryEnabled ? 'activada' : 'desactivada'}`);
     });
+    server.once('error', (error) => {
+        console.error(`[SERVER] Error de escucha en ${host}:${port}: ${error.message}`);
+        process.exitCode = 1;
+    });
+
+    let apagando = false;
+    const apagar = (signal) => {
+        if (apagando) return;
+        apagando = true;
+        console.log(`[SERVER] Recibido ${signal}; iniciando apagado ordenado`);
+        const timeout = setTimeout(() => {
+            console.error('[SERVER] Tiempo de apagado agotado; cerrando conexiones');
+            server.closeAllConnections?.();
+            process.exitCode = 1;
+        }, 10000);
+        timeout.unref();
+        server.close((error) => {
+            clearTimeout(timeout);
+            if (error) {
+                console.error('[SERVER] Error durante el apagado:', error.message);
+                process.exitCode = 1;
+                return;
+            }
+            console.log('[SERVER] Servidor detenido correctamente');
+        });
+    };
+
+    process.once('SIGTERM', () => apagar('SIGTERM'));
+    process.once('SIGINT', () => apagar('SIGINT'));
+    return server;
+}
+
+if (require.main === module) {
+    try {
+        iniciarServidor();
+    } catch (error) {
+        console.error(`[SERVER] No se pudo iniciar: ${error.message}`);
+        process.exitCode = 1;
+    }
 }
 
 module.exports = app;
+module.exports.iniciarServidor = iniciarServidor;
+module.exports.leerPuerto = leerPuerto;

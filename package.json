@@ -1,13 +1,14 @@
 {
   "name": "web-titanesmc",
-  "version": "1.0.0",
+  "version": "0.2.1",
   "private": true,
   "engines": {
     "node": ">=22"
   },
   "scripts": {
     "start": "node server.js",
-    "test": "node --test"
+    "test": "node --test",
+    "docker:build": "docker build -t titanesmc:local ."
   },
   "dependencies": {
     "dotenv": "^18.0.9",

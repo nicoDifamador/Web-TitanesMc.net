@@ -5,7 +5,10 @@
 La configuración recomendada para TitanesMC es:
 
 ```env
-PORT=25573
+HOST=0.0.0.0
+# Pterodactyl's allocation is 25573 in the current server.
+SERVER_PORT=25573
+PORT=3000
 MAIN_FILE=server.js
 SITE_ORIGIN=https://titanesmc.net
 AUTO_DELIVERY_ENABLED=false
@@ -23,7 +26,7 @@ Usa una sola instalación reproducible y haz que cualquier error de Git detenga 
 git pull --ff-only origin main && npm ci && npm start
 ```
 
-No agregues `npm install $NODE_PACKAGES`: Express y dotenv ya están fijados en `package-lock.json`. El servidor escucha en `0.0.0.0` y toma el puerto de `PORT`.
+No agregues `npm install $NODE_PACKAGES`: Express y dotenv ya están fijados en `package-lock.json`. El servidor escucha en `0.0.0.0` y toma el puerto de `SERVER_PORT` o, como alternativa, `PORT`.
 
 ## Actualización segura de un volumen divergido
 
