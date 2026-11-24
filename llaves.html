@@ -121,7 +121,7 @@
             </div>
         </div>
         <div class="auth-buttons">
-            <button class="btn-login" id="btn-login-user" onclick="manejarSesion()">Iniciar Sesión</button>
+            <button class="btn-login" id="btn-login-user" data-action="session">Iniciar Sesión</button>
             <button class="btn-basket" id="btn-basket">🛒 Carrito (0)</button>
         </div>
     </header>
@@ -152,7 +152,7 @@
             <div class="items-grid-keys">
                 
                 <!-- 1. LLAVE ZEUS -->
-                <div class="key-card key-zeus" onclick="abrirModalRango('modal-llave-zeus')">
+                <div class="key-card key-zeus" data-action="open-modal" data-modal-id="modal-llave-zeus">
                     <div class="ribbon-discount" data-product-discount="Llave Zeus (x1)"></div>
                     <div>
                         <span style="color: #f6e05e; font-size: 9px; font-weight: bold; background: #d69e2e22; padding: 2px 6px; border-radius: 3px;">⚡ZEUS</span>
@@ -169,7 +169,7 @@
                 </div>
 
                 <!-- 2. LLAVE POSEIDÓN -->
-                <div class="key-card key-poseidon" onclick="abrirModalRango('modal-llave-poseidon')">
+                <div class="key-card key-poseidon" data-action="open-modal" data-modal-id="modal-llave-poseidon">
                     <div class="ribbon-discount" data-product-discount="Llave Poseidón (x1)"></div>
                     <div>
                         <span style="color: #63b3ed; font-size: 9px; font-weight: bold; background: #3182ce22; padding: 2px 6px; border-radius: 3px;">🌊 POSEIDÓN</span>
@@ -186,7 +186,7 @@
                 </div>
 
                 <!-- 3. LLAVE HADES -->
-                <div class="key-card key-hades" onclick="abrirModalRango('modal-llave-hades')">
+                <div class="key-card key-hades" data-action="open-modal" data-modal-id="modal-llave-hades">
                     <div class="ribbon-discount" data-product-discount="Llave Hades (x1)"></div>
                     <div>
                         <span style="color: #b794f4; font-size: 9px; font-weight: bold; background: #805ad522; padding: 2px 6px; border-radius: 3px;">🔥 HADES</span>
@@ -203,7 +203,7 @@
                 </div>
 
                 <!-- 4. LLAVE MITOLÓGICA -->
-                <div class="key-card key-amor" onclick="abrirModalRango('modal-llave-amor')">
+                <div class="key-card key-amor" data-action="open-modal" data-modal-id="modal-llave-amor">
                     <div class="ribbon-discount" data-product-discount="Llave Mitológica (x1)"></div>
                     <div>
                         <span style="color: #f687b3; font-size: 9px; font-weight: bold; background: #d53f8c22; padding: 2px 6px; border-radius: 3px;">💖AFRODITA</span>
@@ -226,7 +226,7 @@
     <!-- MODAL LLAVE ZEUS -->
     <div class="rank-modal-overlay" id="modal-llave-zeus" style="display: none;">
         <div class="rank-modal-content">
-            <span onclick="cerrarModalRango('modal-llave-zeus')" style="position: absolute; top: 15px; right: 20px; font-size: 24px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">&times;</span>
+            <span data-action="close-modal" data-modal-id="modal-llave-zeus" style="position: absolute; top: 15px; right: 20px; font-size: 24px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1;">&times;</span>
             <h2 style="color: #f6e05e; margin: 0 0 5px 0; font-size: 20px; padding-right: 30px;">LLAVE ZEUS</h2>
             <p style="color: #cbd5e1; font-size: 12px; line-height: 1.5; margin-bottom: 12px;">⚡ <strong>¡Abre el cofre sagrado del Olimpo y descubre nuevos horizontes!</strong> Reclama recompensas eléctricas y domina el panteón.</p>
             
@@ -240,7 +240,7 @@
                     <span style="color: #f6e05e; font-weight: bold; font-size: 15px;">Pack x1 Llave Zeus</span>
                     <span style="color: #fff; font-weight: bold; font-size: 16px;" data-product-price="Llave Zeus (x1)" data-price-suffix=" USD"></span>
                 </div>
-                <button style="background: #d69e2e; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Llave Zeus (x1)'); cerrarModalRango('modal-llave-zeus');">ADQUIRIR</button>
+                <button style="background: #d69e2e; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" data-action="add-product" data-product-name="Llave Zeus (x1)" data-close-modal="modal-llave-zeus">ADQUIRIR</button>
             </div>
         </div>
     </div>
@@ -248,7 +248,7 @@
     <!-- MODAL LLAVE POSEIDÓN -->
     <div class="rank-modal-overlay" id="modal-llave-poseidon" style="display: none;">
         <div class="rank-modal-content">
-            <span onclick="cerrarModalRango('modal-llave-poseidon')" style="position: absolute; top: 15px; right: 20px; font-size: 24px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">&times;</span>
+            <span data-action="close-modal" data-modal-id="modal-llave-poseidon" style="position: absolute; top: 15px; right: 20px; font-size: 24px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1;">&times;</span>
             <h2 style="color: #63b3ed; margin: 0 0 5px 0; font-size: 20px; padding-right: 30px;">LLAVE POSEIDÓN</h2>
             <p style="color: #cbd5e1; font-size: 12px; line-height: 1.5; margin-bottom: 12px;">🌊 <strong>¡Surca las profundidades del mar y descubre nuevos horizontes!</strong> El tridente te guía hacia tesoros inimaginables.</p>
             
@@ -262,7 +262,7 @@
                     <span style="color: #63b3ed; font-weight: bold; font-size: 15px;">Pack x1 Llave Poseidón</span>
                     <span style="color: #fff; font-weight: bold; font-size: 16px;" data-product-price="Llave Poseidón (x1)" data-price-suffix=" USD"></span>
                 </div>
-                <button style="background: #3182ce; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Llave Poseidón (x1)'); cerrarModalRango('modal-llave-poseidon');">ADQUIRIR</button>
+                <button style="background: #3182ce; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" data-action="add-product" data-product-name="Llave Poseidón (x1)" data-close-modal="modal-llave-poseidon">ADQUIRIR</button>
             </div>
         </div>
     </div>
@@ -270,7 +270,7 @@
     <!-- MODAL LLAVE HADES -->
     <div class="rank-modal-overlay" id="modal-llave-hades" style="display: none;">
         <div class="rank-modal-content">
-            <span onclick="cerrarModalRango('modal-llave-hades')" style="position: absolute; top: 15px; right: 20px; font-size: 24px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">&times;</span>
+            <span data-action="close-modal" data-modal-id="modal-llave-hades" style="position: absolute; top: 15px; right: 20px; font-size: 24px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1;">&times;</span>
             <h2 style="color: #b794f4; margin: 0 0 5px 0; font-size: 20px; padding-right: 30px;">LLAVE HADES</h2>
             <p style="color: #cbd5e1; font-size: 12px; line-height: 1.5; margin-bottom: 12px;">🔥 <strong>¡Atraviesa las puertas del inframundo y descubre nuevos horizontes!</strong> Reclama las riquezas ocultas del reino oscuro.</p>
             
@@ -284,7 +284,7 @@
                     <span style="color: #b794f4; font-weight: bold; font-size: 15px;">Pack x1 Llave Hades</span>
                     <span style="color: #fff; font-weight: bold; font-size: 16px;" data-product-price="Llave Hades (x1)" data-price-suffix=" USD"></span>
                 </div>
-                <button style="background: #805ad5; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Llave Hades (x1)'); cerrarModalRango('modal-llave-hades');">ADQUIRIR</button>
+                <button style="background: #805ad5; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" data-action="add-product" data-product-name="Llave Hades (x1)" data-close-modal="modal-llave-hades">ADQUIRIR</button>
             </div>
         </div>
     </div>
@@ -292,7 +292,7 @@
     <!-- MODAL LLAVE MITOLÓGICA -->
     <div class="rank-modal-overlay" id="modal-llave-amor" style="display: none;">
         <div class="rank-modal-content">
-            <span onclick="cerrarModalRango('modal-llave-amor')" style="position: absolute; top: 15px; right: 20px; font-size: 24px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">&times;</span>
+            <span data-action="close-modal" data-modal-id="modal-llave-amor" style="position: absolute; top: 15px; right: 20px; font-size: 24px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1;">&times;</span>
             <h2 style="color: #f687b3; margin: 0 0 5px 0; font-size: 20px; padding-right: 30px;">LLAVE MITOLÓGICA</h2>
             <p style="color: #cbd5e1; font-size: 12px; line-height: 1.5; margin-bottom: 12px;">💖 <strong>¡Desbloquea la magia del panteón y descubre nuevos horizontes!</strong> La gracia de los dioses te otorgará el premio mayor.</p>
             
@@ -306,7 +306,7 @@
                     <span style="color: #f687b3; font-weight: bold; font-size: 15px;">Pack x1 Llave Mitológica</span>
                     <span style="color: #fff; font-weight: bold; font-size: 16px;" data-product-price="Llave Mitológica (x1)" data-price-suffix=" USD"></span>
                 </div>
-                <button style="background: #d53f8c; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Llave Mitológica (x1)'); cerrarModalRango('modal-llave-amor');">ADQUIRIR</button>
+                <button style="background: #d53f8c; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" data-action="add-product" data-product-name="Llave Mitológica (x1)" data-close-modal="modal-llave-amor">ADQUIRIR</button>
             </div>
         </div>
     </div>
@@ -316,7 +316,7 @@
         <div class="modal-content">
             <span class="close-modal" id="close-login">&times;</span>
             <h3>Identifícate</h3>
-            <form onsubmit="guardarSesion(event)">
+            <form data-action="save-session">
                 <label for="input-nick">Nickname:</label>
                 <input type="text" id="input-nick" placeholder="Tu nick" required autocomplete="off">
                 <button type="submit" class="submit-btn" style="width: 100%;">Guardar</button>
@@ -337,7 +337,7 @@
 
             <div class="coupon-section" style="margin: 15px 0; display: flex; gap: 8px;">
                 <input type="text" id="coupon-input" placeholder="Ej. TITANES10" style="padding: 8px; border-radius: 4px; border: 1px solid #4a5568; background: #1a202c; color: #fff; flex: 1; font-size: 13px;">
-                <button type="button" onclick="aplicarCupon()" style="padding: 8px 12px; background: #d69e2e; border: none; border-radius: 4px; color: #000; font-weight: bold; cursor: pointer;">Aplicar</button>
+                <button type="button" data-action="apply-coupon" style="padding: 8px 12px; background: #d69e2e; border: none; border-radius: 4px; color: #000; font-weight: bold; cursor: pointer;">Aplicar</button>
             </div>
 
             <div class="cart-total-section" style="border-top: 1px solid #2d3748; padding-top: 10px; display: flex; flex-direction: column; gap: 5px;">
@@ -353,7 +353,7 @@
                 </div>
             </div>
 
-            <button class="submit-btn" style="width: 100%; margin-top: 15px;" onclick="procederCheckout()">FINALIZAR COMPRA</button>
+            <button class="submit-btn" style="width: 100%; margin-top: 15px;" data-action="checkout">FINALIZAR COMPRA</button>
         </div>
     </div>
 
@@ -365,7 +365,7 @@
                 <p style="margin: 0; font-size: 14px; color: #fff;" id="checkout-total-text"></p>
             </div>
             <div id="paypal-button-container" style="margin-top: 15px;"></div>
-            <button type="button" onclick="cerrarCheckout()" style="width: 100%; padding: 10px; background: #4a5568; border: none; border-radius: 4px; color: #fff; font-weight: bold; cursor: pointer; margin-top: 10px;">Cancelar</button>
+            <button type="button" data-action="close-checkout" style="width: 100%; padding: 10px; background: #4a5568; border: none; border-radius: 4px; color: #fff; font-weight: bold; cursor: pointer; margin-top: 10px;">Cancelar</button>
         </div>
     </div>
 

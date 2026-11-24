@@ -605,6 +605,48 @@ function cerrarModalRango(modalId) {
     }
 }
 
+function manejarAccionInterfaz(event) {
+    const control = event.target.closest("[data-action]");
+    if (!control) return;
+
+    const accion = control.dataset.action;
+    if (accion === "session") {
+        manejarSesion();
+    } else if (accion === "copy-ip") {
+        const ip = control.dataset.ip || "Titanesmc.net";
+        const copia = navigator.clipboard?.writeText(ip);
+        if (copia) {
+            copia.then(() => mostrarToast(`IP copiada: ${ip}`))
+                .catch(() => mostrarToast(`IP del servidor: ${ip}`));
+        } else {
+            mostrarToast(`IP del servidor: ${ip}`);
+        }
+    } else if (accion === "add-featured") {
+        agregarProductoDestacado(control);
+    } else if (accion === "add-product") {
+        const nombre = control.dataset.productName;
+        if (nombre) agregarAlCarrito(nombre);
+        if (control.dataset.closeModal) cerrarModalRango(control.dataset.closeModal);
+    } else if (accion === "open-modal") {
+        abrirModalRango(control.dataset.modalId);
+    } else if (accion === "close-modal") {
+        cerrarModalRango(control.dataset.modalId);
+    } else if (accion === "apply-coupon") {
+        aplicarCupon();
+    } else if (accion === "checkout") {
+        procederCheckout();
+    } else if (accion === "close-checkout") {
+        cerrarCheckout();
+    } else if (accion === "remove-cart-item") {
+        eliminarDelCarrito(control.dataset.productName || "");
+    }
+}
+
+document.addEventListener("click", manejarAccionInterfaz);
+document.addEventListener("submit", (event) => {
+    if (event.target.matches("[data-action=save-session]")) guardarSesion(event);
+});
+
 // =================================================================
 // INICIALIZACIÓN GENERAL AL CARGAR EL DOM
 // =================================================================

@@ -7,7 +7,7 @@ test('featured storefront cards use one configured product name for display and 
     const root = path.join(__dirname, '..');
     const config = JSON.parse(fs.readFileSync(path.join(root, 'config.json'), 'utf8'));
     const storefront = fs.readFileSync(path.join(root, 'tienda.html'), 'utf8');
-    const cards = [...storefront.matchAll(/data-product-name="([^"]+)"[\s\S]*?data-product-price="([^"]+)"[\s\S]*?agregarProductoDestacado\(this\)/g)];
+    const cards = [...storefront.matchAll(/data-product-name="([^"]+)"[\s\S]*?data-product-price="([^"]+)"[\s\S]*?data-action="add-featured"/g)];
 
     assert.equal(cards.length, 3);
     for (const [, cardName, displayedName] of cards) {

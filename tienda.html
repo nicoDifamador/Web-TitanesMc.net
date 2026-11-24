@@ -149,7 +149,7 @@
             </div>
         </div>
         <div class="auth-buttons">
-            <button class="btn-login" id="btn-login-user" onclick="manejarSesion()">Iniciar Sesión</button>
+            <button class="btn-login" id="btn-login-user" data-action="session">Iniciar Sesión</button>
             <button class="btn-basket" id="btn-basket">🛒 Carrito (0)</button>
         </div>
     </header>
@@ -246,7 +246,7 @@
                     <p style="color: #cbd5e1; font-size: 13px; line-height: 1.6; margin-bottom: 20px;">Adquiere rangos divinos, llaves y ventajas exclusivas con entrega automática instantánea al servidor.</p>
                     
                     <!-- Widget interactivo de IP -->
-                    <div class="ip-copy-box" onclick="navigator.clipboard.writeText('Titanesmc.net'); alert('¡IP copiada al portapapeles: Titanesmc.net!');">
+                    <div class="ip-copy-box" data-action="copy-ip" data-ip="Titanesmc.net">
                         <span style="font-size: 14px;">🎮</span>
                         <div>
                             <span style="font-size: 10px; color: #94a3b8; display: block;">CONÉCTATE AHORA (CLIC PARA COPIAR)</span>
@@ -281,7 +281,7 @@
                     </div>
                     <div class="item-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232736; padding-top: 12px; margin-top: 10px;">
                         <span class="item-price" style="color: #fff; font-weight: bold; font-size: 16px;"><span data-product-price="Rango Zeus"></span> <span style="font-size:10px; color:#94a3b8;" data-currency-label>USD</span></span>
-                        <button class="submit-btn" style="background: #d69e2e; color: #000; border: none; padding: 7px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: filter 0.2s;" onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter='none'" onclick="agregarProductoDestacado(this)">COMPRAR</button>
+                        <button class="submit-btn" style="background: #d69e2e; color: #000; border: none; padding: 7px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: filter 0.2s;" data-action="add-featured">COMPRAR</button>
                     </div>
                 </div>
 
@@ -302,7 +302,7 @@
                     </div>
                     <div class="item-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232736; padding-top: 12px; margin-top: 10px;">
                         <span class="item-price" style="color: #fff; font-weight: bold; font-size: 16px;"><span data-product-price="Rango Poseidón"></span> <span style="font-size:10px; color:#94a3b8;" data-currency-label>USD</span></span>
-                        <button class="submit-btn" style="background: #3182ce; color: #fff; border: none; padding: 7px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: filter 0.2s;" onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter='none'" onclick="agregarProductoDestacado(this)">COMPRAR</button>
+                        <button class="submit-btn" style="background: #3182ce; color: #fff; border: none; padding: 7px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: filter 0.2s;" data-action="add-featured">COMPRAR</button>
                     </div>
                 </div>
 
@@ -323,7 +323,7 @@
                     </div>
                     <div class="item-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232736; padding-top: 12px; margin-top: 10px;">
                         <span class="item-price" style="color: #fff; font-weight: bold; font-size: 16px;"><span data-product-price="Rango Hades"></span> <span style="font-size:10px; color:#94a3b8;" data-currency-label>USD</span></span>
-                        <button class="submit-btn" style="background: #805ad5; color: #fff; border: none; padding: 7px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: filter 0.2s;" onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter='none'" onclick="agregarProductoDestacado(this)">COMPRAR</button>
+                        <button class="submit-btn" style="background: #805ad5; color: #fff; border: none; padding: 7px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: filter 0.2s;" data-action="add-featured">COMPRAR</button>
                     </div>
                 </div>
 
@@ -331,7 +331,7 @@
 
             <!-- Bloques Inferiores (Rangos Supremos / Llaves) -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <a href="rangos-supremos.html" style="text-decoration: none; background: #141722; border: 1px solid #2a2b36; border-radius: 10px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; transition: 0.2s;" onmouseover="this.style.borderColor='#f6e05e'" onmouseout="this.style.borderColor='#2a2b36'">
+                <a href="rangos-supremos.html" style="text-decoration: none; background: #141722; border: 1px solid #2a2b36; border-radius: 10px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; transition: 0.2s;">
                     <div>
                         <h4 style="color: #f6e05e; font-size: 14px; margin: 0;">RANGOS SUPREMOS 👑</h4>
                         <p style="color: #94a3b8; font-size: 11px; margin: 3px 0 0 0;">El máximo poder y privilegios en el servidor</p>
@@ -339,7 +339,7 @@
                     <span style="color: #f6e05e; font-size: 16px; font-weight: bold;">&gt;</span>
                 </a>
 
-                <a href="llaves.html" style="text-decoration: none; background: #141722; border: 1px solid #2a2b36; border-radius: 10px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; transition: 0.2s;" onmouseover="this.style.borderColor='#63b3ed'" onmouseout="this.style.borderColor='#2a2b36'">
+                <a href="llaves.html" style="text-decoration: none; background: #141722; border: 1px solid #2a2b36; border-radius: 10px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; transition: 0.2s;">
                     <div>
                         <h4 style="color: #63b3ed; font-size: 14px; margin: 0;">LLAVES DE COFRES 🗝️</h4>
                         <p style="color: #94a3b8; font-size: 11px; margin: 3px 0 0 0;">Abre cofres misteriosos y consigue recompensas épicas</p>
@@ -359,7 +359,7 @@
             <span class="close-modal" id="close-login">&times;</span>
             <h3>Identifícate</h3>
             <p style="color: #94a3b8; font-size: 12px; margin-bottom: 15px; text-align: center;">Ingresa tu nick exacto de Minecraft</p>
-            <form onsubmit="guardarSesion(event)">
+            <form data-action="save-session">
                 <label for="input-nick">Nickname:</label>
                 <input type="text" id="input-nick" placeholder="Tu nick" required autocomplete="off">
                 <button type="submit" class="submit-btn" style="width: 100%; margin-top: 10px;">Guardar Usuario</button>
@@ -380,7 +380,7 @@
 
             <div class="coupon-section" style="margin: 15px 0; display: flex; gap: 8px;">
                 <input type="text" id="coupon-input" placeholder="Ej. TITANES10" style="padding: 8px; border-radius: 4px; border: 1px solid #4a5568; background: #1a202c; color: #fff; flex: 1; font-size: 13px;">
-                <button type="button" onclick="aplicarCupon()" style="padding: 8px 12px; background: #d69e2e; border: none; border-radius: 4px; color: #000; font-weight: bold; cursor: pointer;">Aplicar</button>
+                <button type="button" data-action="apply-coupon" style="padding: 8px 12px; background: #d69e2e; border: none; border-radius: 4px; color: #000; font-weight: bold; cursor: pointer;">Aplicar</button>
             </div>
 
             <div class="cart-total-section" style="border-top: 1px solid #2d3748; padding-top: 10px; display: flex; flex-direction: column; gap: 5px;">
@@ -396,7 +396,7 @@
                 </div>
             </div>
 
-            <button class="submit-btn" style="width: 100%; margin-top: 15px;" onclick="procederCheckout()">FINALIZAR COMPRA</button>
+            <button class="submit-btn" style="width: 100%; margin-top: 15px;" data-action="checkout">FINALIZAR COMPRA</button>
         </div>
     </div>
 
@@ -412,7 +412,7 @@
 
             <div id="paypal-button-container" style="margin-top: 15px;"></div>
 
-            <button type="button" onclick="cerrarCheckout()" style="width: 100%; padding: 10px; background: #4a5568; border: none; border-radius: 4px; color: #fff; font-weight: bold; cursor: pointer; margin-top: 10px;">Cancelar</button>
+            <button type="button" data-action="close-checkout" style="width: 100%; padding: 10px; background: #4a5568; border: none; border-radius: 4px; color: #fff; font-weight: bold; cursor: pointer; margin-top: 10px;">Cancelar</button>
         </div>
     </div>
 

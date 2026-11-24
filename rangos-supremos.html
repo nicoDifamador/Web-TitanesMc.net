@@ -91,7 +91,7 @@
             </div>
         </div>
         <div class="auth-buttons">
-            <button class="btn-login" id="btn-login-user" onclick="manejarSesion()">Iniciar Sesión</button>
+            <button class="btn-login" id="btn-login-user" data-action="session">Iniciar Sesión</button>
             <button class="btn-basket" id="btn-basket">🛒 Carrito (0)</button>
         </div>
     </header>
@@ -121,7 +121,7 @@
             <div class="items-grid">
                 
                 <!-- 1. ZEUS -->
-                <div class="item-card" style="border: 1px solid #d69e2e;" onclick="abrirModalRango('modal-zeus')">
+                <div class="item-card" style="border: 1px solid #d69e2e;" data-action="open-modal" data-modal-id="modal-zeus">
                     <div class="ribbon-discount" data-product-discount="Rango Zeus (Mensual)"></div>
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <img src="img/zeus-icon.jpg" alt="Zeus" style="width: 50px; height: 50px; border-radius: 6px; border: 1px solid #d69e2e; object-fit: cover;">
@@ -143,7 +143,7 @@
                 </div>
 
                 <!-- 2. POSEIDÓN -->
-                <div class="item-card" style="border: 1px solid #3182ce;" onclick="abrirModalRango('modal-poseidon')">
+                <div class="item-card" style="border: 1px solid #3182ce;" data-action="open-modal" data-modal-id="modal-poseidon">
                     <div class="ribbon-discount" data-product-discount="Rango Poseidón (Mensual)"></div>
                     <div style="display: flex; align-items: center; gap: 26px;">
                         <img src="img/poseidon-icono.png" alt="Poseidón" style="width: 50px; height: 50px; border-radius: 9px; border: 1px solid #3182ce; object-fit: cover;">
@@ -165,7 +165,7 @@
                 </div>
 
                 <!-- 3. HADES -->
-                <div class="item-card" style="border: 1px solid #805ad5;" onclick="abrirModalRango('modal-hades')">
+                <div class="item-card" style="border: 1px solid #805ad5;" data-action="open-modal" data-modal-id="modal-hades">
                     <div class="ribbon-discount" data-product-discount="Rango Hades (Mensual)"></div>
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <img src="img/hades-icono.png" alt="Hades" style="width: 50px; height: 50px; border-radius: 6px; border: 1px solid #805ad5; object-fit: cover;">
@@ -187,7 +187,7 @@
                 </div>
 
                 <!-- 4. ATENEA -->
-                <div class="item-card" style="border: 1px solid #319795;" onclick="abrirModalRango('modal-atenea')">
+                <div class="item-card" style="border: 1px solid #319795;" data-action="open-modal" data-modal-id="modal-atenea">
                     <div class="ribbon-discount" data-product-discount="Rango Atenea (Mensual)"></div>
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <img src="img/atenea-icono.png" alt="Atenea" style="width: 50px; height: 50px; border-radius: 6px; border: 1px solid #319795; object-fit: cover;">
@@ -209,7 +209,7 @@
                 </div>
 
                 <!-- 5. ARES -->
-                <div class="item-card" style="border: 1px solid #e53e3e;" onclick="abrirModalRango('modal-ares')">
+                <div class="item-card" style="border: 1px solid #e53e3e;" data-action="open-modal" data-modal-id="modal-ares">
                     <div class="ribbon-discount" data-product-discount="Rango Ares (Mensual)"></div>
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <img src="img/ares-icono.png" alt="Ares" style="width: 50px; height: 50px; border-radius: 6px; border: 1px solid #e53e3e; object-fit: cover;">
@@ -231,7 +231,7 @@
                 </div>
 
                 <!-- 6. APOLO -->
-                <div class="item-card" style="border: 1px solid #dd6b20;" onclick="abrirModalRango('modal-apolo')">
+                <div class="item-card" style="border: 1px solid #dd6b20;" data-action="open-modal" data-modal-id="modal-apolo">
                     <div class="ribbon-discount" data-product-discount="Rango Apolo (Mensual)"></div>
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <img src="img/apolo-icono.png" alt="Apolo" style="width: 50px; height: 50px; border-radius: 6px; border: 1px solid #dd6b20; object-fit: cover;">
@@ -259,7 +259,7 @@
     <!-- Modal Zeus -->
     <div class="rank-modal-overlay" id="modal-zeus" style="display: none;">
         <div class="rank-modal-content" style="position: relative;">
-            <span class="close-modal" onclick="cerrarModalOpciones('modal-zeus')" style="position: absolute; top: 15px; right: 20px; font-size: 22px; color: #94a3b8; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">&times;</span>
+            <span class="close-modal" data-action="close-modal" data-modal-id="modal-zeus" style="position: absolute; top: 15px; right: 20px; font-size: 22px; color: #94a3b8; cursor: pointer; transition: color 0.2s;">&times;</span>
             <h3 style="color: #f6e05e; font-size: 18px; font-weight: bold; margin: 0 0 15px 0; letter-spacing: 0.5px; text-align: center;">RANGO ZEUS - OPCIONES DE COMPRA</h3>
             <div style="display: flex; flex-direction: column; gap: 15px;">
                 <div style="background: #1a202c; border: 1px solid #2d3748; border-radius: 8px; padding: 14px;">
@@ -271,7 +271,7 @@
                         <li>Kit Zeus mensual (Armadura Netherite completa, herramientas y armas).</li>
                         <li>Acceso a /fly en lobbies y comandos exclusivos.</li>
                     </ul>
-                    <button onclick="agregarAlCarrito('Rango Zeus (Mensual)'); cerrarModalOpciones('modal-zeus');" style="width: 100%; background: #d69e2e; color: #000; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer;">COMPRAR MENSUAL</button>
+                    <button data-action="add-product" data-product-name="Rango Zeus (Mensual)" data-close-modal="modal-zeus" style="width: 100%; background: #d69e2e; color: #000; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer;">COMPRAR MENSUAL</button>
                 </div>
                 <div style="background: #1a202c; border: 1px dashed #d69e2e; border-radius: 8px; padding: 10px; text-align: center;">
                     <span style="font-size: 11px; color: #f6e05e; font-weight: bold; display: block; margin-bottom: 6px; letter-spacing: 1px;">⚡ KIT EXCLUSIVO ZEUS INCLUIDO ⚡</span>
@@ -287,7 +287,7 @@
                         <li>Acceso ilimitado a /fly y prioridad máxima en el servidor.</li>
                         <li>20 homes / Protecciones extendidas / Soporte prioritario.</li>
                     </ul>
-                    <button onclick="agregarAlCarrito('Rango Zeus (Permanente)'); cerrarModalOpciones('modal-zeus');" style="width: 100%; background: #d69e2e; color: #000; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer;">COMPRAR PERMANENTE</button>
+                    <button data-action="add-product" data-product-name="Rango Zeus (Permanente)" data-close-modal="modal-zeus" style="width: 100%; background: #d69e2e; color: #000; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer;">COMPRAR PERMANENTE</button>
                 </div>
             </div>
         </div>
@@ -296,7 +296,7 @@
     <!-- Modal Poseidón -->
     <div class="rank-modal-overlay" id="modal-poseidon" style="display: none;">
         <div class="rank-modal-content" style="position: relative;">
-            <span onclick="cerrarModalRango('modal-poseidon')" style="position: absolute; top: 12px; right: 18px; font-size: 26px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1; padding: 5px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">&times;</span>
+            <span data-action="close-modal" data-modal-id="modal-poseidon" style="position: absolute; top: 12px; right: 18px; font-size: 26px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1; padding: 5px;">&times;</span>
             <h2 style="color: #63b3ed; margin: 0 0 15px 0; font-size: 22px; padding-right: 25px;">RANGO POSEIDÓN - OPCIONES DE COMPRA</h2>
             <div style="display: flex; flex-direction: column; gap: 15px;">
                 <div style="background: #181f33; padding: 15px; border-radius: 8px; border: 1px solid #3182ce55;">
@@ -309,7 +309,7 @@
                     </div>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• El kit solo se recibe 1 vez después de su compra.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 10px 0;">• Acceso a 10 comandos / 10 homes.</p>
-                    <button style="background: #3182ce; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Poseidón (Mensual)'); cerrarModalRango('modal-poseidon');">COMPRAR MENSUAL</button>
+                    <button style="background: #3182ce; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" data-action="add-product" data-product-name="Rango Poseidón (Mensual)" data-close-modal="modal-poseidon">COMPRAR MENSUAL</button>
                 </div>
                 <div style="background: #181f33; border: 1px dashed #3182ce; border-radius: 8px; padding: 10px; text-align: center;">
                     <span style="font-size: 11px; color: #63b3ed; font-weight: bold; display: block; margin-bottom: 6px; letter-spacing: 1px;">🌊 KIT EXCLUSIVO POSEIDÓN INCLUIDO 🌊</span>
@@ -326,7 +326,7 @@
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• El kit se recibe cada 9 días después de su compra.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• Acceso a 10 comandos / Soporte de atención rápida.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 10px 0;">• 15 homes / Protección 400x400 / Apoyo builder / Aplanado 200x200 / 1 casa 50x50.</p>
-                    <button style="background: #63b3ed; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Poseidón (Permanente)'); cerrarModalRango('modal-poseidon');">COMPRAR PERMANENTE</button>
+                    <button style="background: #63b3ed; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" data-action="add-product" data-product-name="Rango Poseidón (Permanente)" data-close-modal="modal-poseidon">COMPRAR PERMANENTE</button>
                 </div>
             </div>
         </div>
@@ -335,7 +335,7 @@
     <!-- Modal Hades -->
     <div class="rank-modal-overlay" id="modal-hades" style="display: none;">
         <div class="rank-modal-content" style="position: relative;">
-            <span onclick="cerrarModalRango('modal-hades')" style="position: absolute; top: 12px; right: 18px; font-size: 26px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1; padding: 5px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">&times;</span>
+            <span data-action="close-modal" data-modal-id="modal-hades" style="position: absolute; top: 12px; right: 18px; font-size: 26px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1; padding: 5px;">&times;</span>
             <h2 style="color: #b794f4; margin: 0 0 15px 0; font-size: 22px; padding-right: 25px;">RANGO HADES - OPCIONES DE COMPRA</h2>
             <div style="display: flex; flex-direction: column; gap: 15px;">
                 <div style="background: #181f33; padding: 15px; border-radius: 8px; border: 1px solid #805ad555;">
@@ -348,7 +348,7 @@
                     </div>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• El kit solo se recibe 1 vez después de su compra.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 10px 0;">• Acceso a 10 comandos / 10 homes.</p>
-                    <button style="background: #805ad5; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Hades (Mensual)'); cerrarModalRango('modal-hades');">COMPRAR MENSUAL</button>
+                    <button style="background: #805ad5; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" data-action="add-product" data-product-name="Rango Hades (Mensual)" data-close-modal="modal-hades">COMPRAR MENSUAL</button>
                 </div>
                 <div style="background: #181f33; border: 1px dashed #805ad5; border-radius: 8px; padding: 10px; text-align: center;">
                     <span style="font-size: 11px; color: #b794f4; font-weight: bold; display: block; margin-bottom: 6px; letter-spacing: 1px;">💀 KIT EXCLUSIVO HADES INCLUIDO 💀</span>
@@ -365,7 +365,7 @@
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• El kit se recibe cada 9 días después de su compra.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• Acceso a 10 comandos / Soporte de atención rápida.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 10px 0;">• 15 homes / Protección 400x400 / Apoyo builder / Aplanado 200x200 / 1 casa 50x50.</p>
-                    <button style="background: #b794f4; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Hades (Permanente)'); cerrarModalRango('modal-hades');">COMPRAR PERMANENTE</button>
+                    <button style="background: #b794f4; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" data-action="add-product" data-product-name="Rango Hades (Permanente)" data-close-modal="modal-hades">COMPRAR PERMANENTE</button>
                 </div>
             </div>
         </div>
@@ -374,7 +374,7 @@
     <!-- Modal Atenea -->
     <div class="rank-modal-overlay" id="modal-atenea" style="display: none;">
         <div class="rank-modal-content" style="position: relative;">
-            <span onclick="cerrarModalRango('modal-atenea')" style="position: absolute; top: 12px; right: 18px; font-size: 26px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1; padding: 5px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">&times;</span>
+            <span data-action="close-modal" data-modal-id="modal-atenea" style="position: absolute; top: 12px; right: 18px; font-size: 26px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1; padding: 5px;">&times;</span>
             <h2 style="color: #4fd1c5; margin: 0 0 15px 0; font-size: 22px; padding-right: 25px;">RANGO ATENEA - OPCIONES DE COMPRA</h2>
             <div style="display: flex; flex-direction: column; gap: 15px;">
                 <div style="background: #181f33; padding: 15px; border-radius: 8px; border: 1px solid #31979555;">
@@ -387,7 +387,7 @@
                     </div>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• El kit solo se recibe 1 vez después de su compra.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 10px 0;">• Acceso a 6 comandos / 8 homes.</p>
-                    <button style="background: #319795; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Atenea (Mensual)'); cerrarModalRango('modal-atenea');">COMPRAR MENSUAL</button>
+                    <button style="background: #319795; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" data-action="add-product" data-product-name="Rango Atenea (Mensual)" data-close-modal="modal-atenea">COMPRAR MENSUAL</button>
                 </div>
                 <div style="background: #181f33; border: 1px dashed #319795; border-radius: 8px; padding: 10px; text-align: center;">
                     <span style="font-size: 11px; color: #4fd1c5; font-weight: bold; display: block; margin-bottom: 6px; letter-spacing: 1px;">🛡️ KIT EXCLUSIVO ATENEA INCLUIDO 🛡️</span>
@@ -404,7 +404,7 @@
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• El kit se recibe cada 14 días después de su compra.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• Acceso a 6 comandos / Soporte de atención rápida.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 10px 0;">• 8 homes / Protección 300x300.</p>
-                    <button style="background: #4fd1c5; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Atenea (Permanente)'); cerrarModalRango('modal-atenea');">COMPRAR PERMANENTE</button>
+                    <button style="background: #4fd1c5; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" data-action="add-product" data-product-name="Rango Atenea (Permanente)" data-close-modal="modal-atenea">COMPRAR PERMANENTE</button>
                 </div>
             </div>
         </div>
@@ -413,7 +413,7 @@
     <!-- Modal Ares -->
     <div class="rank-modal-overlay" id="modal-ares" style="display: none;">
         <div class="rank-modal-content" style="position: relative;">
-            <span onclick="cerrarModalRango('modal-ares')" style="position: absolute; top: 12px; right: 18px; font-size: 26px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1; padding: 5px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">&times;</span>
+            <span data-action="close-modal" data-modal-id="modal-ares" style="position: absolute; top: 12px; right: 18px; font-size: 26px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1; padding: 5px;">&times;</span>
             <h2 style="color: #fc8181; margin: 0 0 15px 0; font-size: 22px; padding-right: 25px;">RANGO ARES - OPCIONES DE COMPRA</h2>
             <div style="display: flex; flex-direction: column; gap: 15px;">
                 <div style="background: #181f33; padding: 15px; border-radius: 8px; border: 1px solid #e53e3e55;">
@@ -426,7 +426,7 @@
                     </div>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• El kit solo se recibe 1 vez después de su compra.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 10px 0;">• Acceso a 5 comandos / 5 homes.</p>
-                    <button style="background: #e53e3e; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Ares (Mensual)'); cerrarModalRango('modal-ares');">COMPRAR MENSUAL</button>
+                    <button style="background: #e53e3e; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" data-action="add-product" data-product-name="Rango Ares (Mensual)" data-close-modal="modal-ares">COMPRAR MENSUAL</button>
                 </div>
                 <div style="background: #181f33; border: 1px dashed #e53e3e; border-radius: 8px; padding: 10px; text-align: center;">
                     <span style="font-size: 11px; color: #fc8181; font-weight: bold; display: block; margin-bottom: 6px; letter-spacing: 1px;">⚔️ KIT EXCLUSIVO ARES INCLUIDO ⚔️</span>
@@ -443,7 +443,7 @@
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• El kit se recibe cada 15 días después de su compra.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• Acceso a 5 comandos / Soporte de atención rápida.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 10px 0;">• 5 homes / Protección 200x200.</p>
-                    <button style="background: #fc8181; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Ares (Permanente)'); cerrarModalRango('modal-ares');">COMPRAR PERMANENTE</button>
+                    <button style="background: #fc8181; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" data-action="add-product" data-product-name="Rango Ares (Permanente)" data-close-modal="modal-ares">COMPRAR PERMANENTE</button>
                 </div>
             </div>
         </div>
@@ -452,7 +452,7 @@
     <!-- Modal Apolo -->
     <div class="rank-modal-overlay" id="modal-apolo" style="display: none;">
         <div class="rank-modal-content" style="position: relative;">
-            <span onclick="cerrarModalRango('modal-apolo')" style="position: absolute; top: 12px; right: 18px; font-size: 26px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1; padding: 5px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">&times;</span>
+            <span data-action="close-modal" data-modal-id="modal-apolo" style="position: absolute; top: 12px; right: 18px; font-size: 26px; color: #94a3b8; cursor: pointer; z-index: 50; line-height: 1; padding: 5px;">&times;</span>
             <h2 style="color: #fbd38d; margin: 0 0 15px 0; font-size: 22px; padding-right: 25px;">RANGO APOLO - OPCIONES DE COMPRA</h2>
             <div style="display: flex; flex-direction: column; gap: 15px;">
                 <div style="background: #181f33; padding: 15px; border-radius: 8px; border: 1px solid #dd6b2055;">
@@ -465,7 +465,7 @@
                     </div>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• El kit solo se recibe 1 vez después de su compra.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 10px 0;">• Acceso a 5 comandos / 5 homes.</p>
-                    <button style="background: #dd6b20; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Apolo (Mensual)'); cerrarModalRango('modal-apolo');">COMPRAR MENSUAL</button>
+                    <button style="background: #dd6b20; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" data-action="add-product" data-product-name="Rango Apolo (Mensual)" data-close-modal="modal-apolo">COMPRAR MENSUAL</button>
                 </div>
                 <div style="background: #181f33; border: 1px dashed #dd6b20; border-radius: 8px; padding: 10px; text-align: center;">
                     <span style="font-size: 11px; color: #fbd38d; font-weight: bold; display: block; margin-bottom: 6px; letter-spacing: 1px;">☀️ KIT EXCLUSIVO APOLO INCLUIDO ☀️</span>
@@ -482,7 +482,7 @@
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• El kit se recibe cada 15 días después de su compra.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 5px 0;">• Acceso a 5 comandos / Soporte de atención rápida.</p>
                     <p style="color: #cbd5e1; font-size: 12px; margin: 0 0 10px 0;">• 5 homes / Protección 100x100.</p>
-                    <button style="background: #fbd38d; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" onclick="agregarAlCarrito('Rango Apolo (Permanente)'); cerrarModalRango('modal-apolo');">COMPRAR PERMANENTE</button>
+                    <button style="background: #fbd38d; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;" data-action="add-product" data-product-name="Rango Apolo (Permanente)" data-close-modal="modal-apolo">COMPRAR PERMANENTE</button>
                 </div>
             </div>
         </div>
@@ -493,7 +493,7 @@
         <div class="modal-content" style="max-width: 400px;">
             <span class="close-modal" id="close-login">&times;</span>
             <h3>Identifícate</h3>
-            <form onsubmit="guardarSesion(event)">
+            <form data-action="save-session">
                 <label for="input-nick">Nickname:</label>
                 <input type="text" id="input-nick" placeholder="Tu nick" required autocomplete="off">
                 <button type="submit" class="submit-btn" style="width: 100%; margin-top: 10px;">Guardar</button>
@@ -515,7 +515,7 @@
 
             <div class="coupon-section" style="margin: 15px 0; display: flex; gap: 8px;">
                 <input type="text" id="coupon-input" placeholder="Ej. TITANES10" style="padding: 8px; border-radius: 4px; border: 1px solid #4a5568; background: #1a202c; color: #fff; flex: 1; font-size: 13px;">
-                <button type="button" onclick="aplicarCupon()" style="padding: 8px 12px; background: #d69e2e; border: none; border-radius: 4px; color: #000; font-weight: bold; cursor: pointer;">Aplicar</button>
+                <button type="button" data-action="apply-coupon" style="padding: 8px 12px; background: #d69e2e; border: none; border-radius: 4px; color: #000; font-weight: bold; cursor: pointer;">Aplicar</button>
             </div>
 
             <div class="cart-total-section" style="border-top: 1px solid #2d3748; padding-top: 10px; display: flex; flex-direction: column; gap: 5px;">
@@ -531,7 +531,7 @@
                 </div>
             </div>
 
-            <button class="submit-btn" style="width: 100%; margin-top: 15px;" onclick="procederCheckout()">FINALIZAR COMPRA</button>
+            <button class="submit-btn" style="width: 100%; margin-top: 15px;" data-action="checkout">FINALIZAR COMPRA</button>
         </div>
     </div>
 
@@ -544,7 +544,7 @@
                 <p style="margin: 0; font-size: 14px; color: #fff;" id="checkout-total-text">Total a Pagar: $0.00</p>
             </div>
             <div id="paypal-button-container" style="margin-top: 15px;"></div>
-            <button type="button" onclick="cerrarCheckout()" style="width: 100%; padding: 10px; background: #4a5568; border: none; border-radius: 4px; color: #fff; font-weight: bold; cursor: pointer; margin-top: 10px;">Cancelar</button>
+            <button type="button" data-action="close-checkout" style="width: 100%; padding: 10px; background: #4a5568; border: none; border-radius: 4px; color: #fff; font-weight: bold; cursor: pointer; margin-top: 10px;">Cancelar</button>
         </div>
     </div>
 
@@ -583,18 +583,5 @@
 
     <!-- Scripts de control -->
     <script src="java/main.js"></script>
-    <script>
-        function abrirModalRango(idModal) {
-            document.getElementById(idModal).style.display = 'flex';
-        }
-        function cerrarModalOpciones(idModal) {
-            document.getElementById(idModal).style.display = 'none';
-        }
-        window.onclick = function(event) {
-            if (event.target.classList.contains('rank-modal-overlay')) {
-                event.target.style.display = 'none';
-            }
-        }
-    </script>
 </body>
 </html>

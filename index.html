@@ -100,7 +100,7 @@
         }
     </style>
 </head>
-<body onclick="entrarTienda()">
+<body data-action="enter-store">
 
     <div class="loading-container">
         <img src="img/logo.png" alt="TITANES MC Logo" class="logo-glow">
@@ -111,19 +111,9 @@
         </div>
     </div>
 
-    <a href="https://discord.gg/DSvxS5snXB" target="_blank" class="discord-float" title="¡Únete a nuestro Discord!" onclick="event.stopPropagation()">
+    <a href="https://discord.gg/DSvxS5snXB" target="_blank" class="discord-float" title="¡Únete a nuestro Discord!">
         <img src="img/discord.png" alt="Discord">
     </a>
-
-    <script>
-        function entrarTienda() {
-            window.location.href = "tienda.html";
-        }
-
-        setTimeout(() => {
-            entrarTienda();
-        }, 2000);
-    </script>
-    <script src="java/main.js"></script>
+    <script src="java/landing.js" defer></script>
 </body>
 </html>
